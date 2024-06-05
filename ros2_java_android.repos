@@ -2,19 +2,19 @@ repositories:
   ament/ament_cmake:
     type: git
     url: https://github.com/ament/ament_cmake.git
-    version: galactic
+    version: humble
   ament/ament_index:
     type: git
     url: https://github.com/ament/ament_index.git
-    version: galactic
+    version: humble
   ament/ament_lint:
     type: git
     url: https://github.com/ament/ament_lint.git
-    version: galactic
+    version: humble
   ament/ament_package:
     type: git
     url: https://github.com/ament/ament_package.git
-    version: galactic
+    version: humble
   ament/google_benchmark_vendor:
     type: git
     url: https://github.com/ament/google_benchmark_vendor.git
@@ -22,19 +22,19 @@ repositories:
   ament/googletest:
     type: git
     url: https://github.com/ament/googletest.git
-    version: galactic
+    version: humble
   ament/uncrustify_vendor:
     type: git
     url: https://github.com/ament/uncrustify_vendor.git
-    version: galactic
+    version: humble
   eProsima/Fast-CDR:
     type: git
     url: https://github.com/eProsima/Fast-CDR.git
-    version: v1.0.20
+    version: 1.0.x
   eProsima/Fast-DDS:
     type: git
     url: https://github.com/eProsima/Fast-DDS.git
-    version: 2.3.x
+    version: 2.6.x
   eProsima/foonathan_memory_vendor:
     type: git
     url: https://github.com/eProsima/foonathan_memory_vendor.git
@@ -46,115 +46,119 @@ repositories:
   osrf/osrf_testing_tools_cpp:
     type: git
     url: https://github.com/osrf/osrf_testing_tools_cpp.git
-    version: master
+    version: humble
   ros-tooling/libstatistics_collector:
     type: git
     url: https://github.com/ros-tooling/libstatistics_collector.git
-    version: master
+    version: humble
   ros-tracing/ros2_tracing:
     type: git
     url: https://gitlab.com/ros-tracing/ros2_tracing.git
-    version: master
+    version: humble
   ros2/ament_cmake_ros:
     type: git
     url: https://github.com/ros2/ament_cmake_ros.git
-    version: galactic
+    version: humble
   ros2/common_interfaces:
     type: git
     url: https://github.com/ros2/common_interfaces.git
-    version: galactic
+    version: humble
   ros2/example_interfaces:
     type: git
     url: https://github.com/ros2/example_interfaces.git
-    version: galactic
+    version: humble
   ros2/launch:
     type: git
     url: https://github.com/ros2/launch.git
-    version: galactic
+    version: humble
   ros2/libyaml_vendor:
     type: git
     url: https://github.com/ros2/libyaml_vendor.git
-    version: galactic
+    version: humble
   ros2/performance_test_fixture:
     type: git
     url: https://github.com/ros2/performance_test_fixture.git
-    version: main
+    version: humble
   ros2/python_cmake_module:
     type: git
     url: https://github.com/ros2/python_cmake_module.git
-    version: galactic
+    version: humble
   ros2/rcl:
     type: git
     url: https://github.com/ros2/rcl.git
-    version: galactic
+    version: humble
   ros2/rcl_interfaces:
     type: git
     url: https://github.com/ros2/rcl_interfaces.git
-    version: galactic
+    version: humble
+  ros2/spdlog_vendor:
+    type: git
+    url: https://github.com/ros2/spdlog_vendor.git
+    version: humble
   ros2/rcl_logging:
     type: git
     url: https://github.com/ros2/rcl_logging.git
-    version: galactic
+    version: humble
   ros2/rcpputils:
     type: git
     url: https://github.com/ros2/rcpputils.git
-    version: galactic
+    version: humble
   ros2/rcutils:
     type: git
     url: https://github.com/ros2/rcutils.git
-    version: galactic
+    version: humble
   ros2/rmw:
     type: git
     url: https://github.com/ros2/rmw.git
-    version: galactic
+    version: humble
   ros2/rmw_dds_common:
     type: git
     url: https://github.com/ros2/rmw_dds_common.git
-    version: galactic
+    version: humble
   ros2/rmw_fastrtps:
     type: git
     url: https://github.com/ros2/rmw_fastrtps.git
-    version: galactic
+    version: humble
   ros2/rmw_implementation:
     type: git
     url: https://github.com/ros2/rmw_implementation.git
-    version: galactic
+    version: humble
   ros2/rosidl:
     type: git
     url: https://github.com/ros2/rosidl.git
-    version: galactic
+    version: humble
   ros2/rosidl_dds:
     type: git
     url: https://github.com/ros2/rosidl_dds.git
-    version: galactic
+    version: humble
   ros2/rosidl_defaults:
     type: git
     url: https://github.com/ros2/rosidl_defaults.git
-    version: galactic
+    version: humble
   ros2/rosidl_python:
     type: git
     url: https://github.com/ros2/rosidl_python.git
-    version: galactic
+    version: humble
   ros2/rosidl_typesupport:
     type: git
     url: https://github.com/ros2/rosidl_typesupport.git
-    version: galactic
+    version: humble
   ros2/rosidl_typesupport_fastrtps:
     type: git
     url: https://github.com/ros2/rosidl_typesupport_fastrtps.git
-    version: galactic
+    version: humble
   ros2/rpyutils:
     type: git
     url: https://github.com/ros2/rpyutils.git
-    version: galactic
+    version: humble
   ros2/test_interface_files:
     type: git
     url: https://github.com/ros2/test_interface_files.git
-    version: galactic
+    version: humble
   ros2/unique_identifier_msgs:
     type: git
     url: https://github.com/ros2/unique_identifier_msgs.git
-    version: galactic
+    version: humble
   ros2-java/ament_java:
     type: git
     url: https://github.com/ros2-java/ament_java.git
