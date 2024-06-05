@@ -15,7 +15,6 @@
 
 package org.ros2.rcljava.client;
 
-import java.time.Duration;
 import java.lang.ref.WeakReference;
 import java.lang.IllegalStateException;
 import java.lang.InterruptedException;
@@ -26,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.ros2.rcljava.time.Duration;
 import org.ros2.rcljava.RCLJava;
 import org.ros2.rcljava.common.JNIUtils;
 import org.ros2.rcljava.concurrent.RCLFuture;

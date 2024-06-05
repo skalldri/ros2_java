@@ -15,9 +15,9 @@
 
 package org.ros2.rcljava.client;
 
-import java.time.Duration;
 import java.util.concurrent.Future;
 
+import org.ros2.rcljava.time.Duration;
 import org.ros2.rcljava.concurrent.RCLFuture;
 import org.ros2.rcljava.consumers.Consumer;
 import org.ros2.rcljava.interfaces.Disposable;
@@ -65,7 +65,7 @@ public interface Client<T extends ServiceDefinition> extends Disposable {
    *   A negative value is treated as an infinite timeout.
    * @return true if the service is available, false otherwise.
    */
-  boolean waitForService(Duration timeout);
+  boolean waitForService(Duration timeout_s);
 
   String getServiceName();
 }

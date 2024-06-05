@@ -27,13 +27,13 @@ import org.junit.Test;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-import java.time.Duration;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.ros2.rcljava.time.Duration;
 import org.ros2.rcljava.RCLJava;
 import org.ros2.rcljava.concurrent.RCLFuture;
 import org.ros2.rcljava.consumers.TriConsumer;
@@ -111,7 +111,7 @@ public class ClientTest {
     Client<rcljava.srv.AddTwoInts> client =
         node.<rcljava.srv.AddTwoInts>createClient(rcljava.srv.AddTwoInts.class, "add_two_ints");
 
-    assertTrue(client.waitForService(Duration.ofSeconds(10)));
+        assertTrue(client.waitForService(Duration.ofSeconds(10)));
 
     Future<rcljava.srv.AddTwoInts_Response> responseFuture = client.asyncSendRequest(request);
 

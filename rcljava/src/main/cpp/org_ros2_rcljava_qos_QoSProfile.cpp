@@ -36,10 +36,10 @@ qos_set_duration(JNIEnv * env, uint64_t seconds, uint64_t nanos, jobject jqos, j
     // in a jlong.
     nanos = static_cast<uint64_t>(std::numeric_limits<jlong>::max());
   }
-  jclass duration_clazz = env->FindClass("java/time/Duration");
+  jclass duration_clazz = env->FindClass("org/ros2/rcljava/time/Duration");
   RCLJAVA_COMMON_CHECK_FOR_EXCEPTION(env);
   jmethodID factory_mid = env->GetStaticMethodID(
-    duration_clazz, "ofSeconds", "(JJ)Ljava/time/Duration;");
+    duration_clazz, "ofSeconds", "(JJ)Lorg/ros2/rcljava/time/Duration;");
   RCLJAVA_COMMON_CHECK_FOR_EXCEPTION(env);
   jobject jduration = env->CallStaticObjectMethod(
     duration_clazz, factory_mid, static_cast<jlong>(seconds), static_cast<jlong>(nanos));
@@ -63,15 +63,15 @@ qos_from_rcl(JNIEnv * env, const rmw_qos_profile_t & qos, jobject jqos)
   const char * durability_class_path = "Lorg/ros2/rcljava/qos/policies/Durability;";
   jfieldID durability_fid = env->GetFieldID(clazz, "durability", durability_class_path);
   RCLJAVA_COMMON_CHECK_FOR_EXCEPTION(env);
-  jfieldID deadline_fid = env->GetFieldID(clazz, "deadline", "Ljava/time/Duration;");
+  jfieldID deadline_fid = env->GetFieldID(clazz, "deadline", "Lorg/ros2/rcljava/time/Duration;");
   RCLJAVA_COMMON_CHECK_FOR_EXCEPTION(env);
-  jfieldID lifespan_fid = env->GetFieldID(clazz, "lifespan", "Ljava/time/Duration;");
+  jfieldID lifespan_fid = env->GetFieldID(clazz, "lifespan", "Lorg/ros2/rcljava/time/Duration;");
   RCLJAVA_COMMON_CHECK_FOR_EXCEPTION(env);
   const char * liveliness_class_path = "Lorg/ros2/rcljava/qos/policies/Liveliness;";
   jfieldID liveliness_fid = env->GetFieldID(clazz, "liveliness", liveliness_class_path);
   RCLJAVA_COMMON_CHECK_FOR_EXCEPTION(env);
   jfieldID liveliness_lease_fid = env->GetFieldID(
-    clazz, "livelinessLeaseDuration", "Ljava/time/Duration;");
+    clazz, "livelinessLeaseDuration", "Lorg/ros2/rcljava/time/Duration;");
   RCLJAVA_COMMON_CHECK_FOR_EXCEPTION(env);
   jfieldID avoid_ros_conventions_fid = env->GetFieldID(
     clazz, "avoidROSNamespaceConventions", "Z");

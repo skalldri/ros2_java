@@ -193,6 +193,7 @@ set(${PROJECT_NAME}_sources
   "src/main/java/org/ros2/rcljava/subscription/statuses/RequestedQosIncompatible.java"
   "src/main/java/org/ros2/rcljava/time/Clock.java"
   "src/main/java/org/ros2/rcljava/time/ClockType.java"
+  "src/main/java/org/ros2/rcljava/time/Duration.java"
   "src/main/java/org/ros2/rcljava/timer/Timer.java"
   "src/main/java/org/ros2/rcljava/timer/WallTimer.java"
   "src/main/java/org/ros2/rcljava/timer/WallTimerImpl.java"

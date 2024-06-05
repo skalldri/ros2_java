@@ -15,11 +15,10 @@
 
 package org.ros2.rcljava.qos;
 
-import java.time.Duration;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.ros2.rcljava.time.Duration;
 import org.ros2.rcljava.common.JNIUtils;
 import org.ros2.rcljava.qos.policies.Durability;
 import org.ros2.rcljava.qos.policies.History;
