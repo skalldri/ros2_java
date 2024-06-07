@@ -21,7 +21,8 @@ import org.slf4j.LoggerFactory;
 public final class JNIUtils {
   private static final Logger logger = LoggerFactory.getLogger(JNIUtils.class);
 
-  private static final String TYPESUPPORT = "rosidl_typesupport_c";
+  //private static final String TYPESUPPORT = "rosidl_typesupport_c";
+  private static final String TYPESUPPORT = "rosidl_typesupport_fastrtps_c";
 
   /**
    * Private constructor so this cannot be instantiated.
