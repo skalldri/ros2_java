@@ -6,7 +6,7 @@
 package @(package_name + '.' + interface_path.parts[0]);
 @{
 import os
-from rosidl_cmake import expand_template
+from rosidl_pycommon import expand_template
 
 namespaces = service.namespaced_type.namespaces
 type_name = service.namespaced_type.name

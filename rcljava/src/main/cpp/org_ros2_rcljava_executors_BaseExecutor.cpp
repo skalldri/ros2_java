@@ -52,12 +52,12 @@ convert_rmw_request_id_to_java(JNIEnv * env, rmw_request_id_t * request_id)
   assert(jsequence_number_field_id != nullptr);
   assert(jwriter_guid_field_id != nullptr);
 
-  int8_t * writer_guid = request_id->writer_guid;
+  uint8_t * writer_guid = request_id->writer_guid;
   int64_t sequence_number = request_id->sequence_number;
 
   env->SetLongField(jrequest_id, jsequence_number_field_id, sequence_number);
 
-  jsize writer_guid_len = 16;  // See rmw/rmw/include/rmw/types.h
+  jsize writer_guid_len = RMW_GID_STORAGE_SIZE;
 
   jbyteArray jwriter_guid = env->NewByteArray(writer_guid_len);
   env->SetByteArrayRegion(jwriter_guid, 0, writer_guid_len, reinterpret_cast<jbyte *>(writer_guid));
@@ -82,10 +82,10 @@ convert_rmw_request_id_from_java(JNIEnv * env, jobject jrequest_id)
 
   rmw_request_id_t * request_id = static_cast<rmw_request_id_t *>(malloc(sizeof(rmw_request_id_t)));
 
-  int8_t * writer_guid = request_id->writer_guid;
+  uint8_t * writer_guid = request_id->writer_guid;
   request_id->sequence_number = env->GetLongField(jrequest_id, jsequence_number_field_id);
 
-  jsize writer_guid_len = 16;  // See rmw/rmw/include/rmw/types.h
+  jsize writer_guid_len = RMW_GID_STORAGE_SIZE;  // See rmw/rmw/include/rmw/types.h
 
   jbyteArray jwriter_guid = (jbyteArray)env->GetObjectField(jrequest_id, jwriter_guid_field_id);
   env->GetByteArrayRegion(jwriter_guid, 0, writer_guid_len, reinterpret_cast<jbyte *>(writer_guid));

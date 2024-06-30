@@ -12,6 +12,7 @@ find_package(rcl_interfaces REQUIRED)
 find_package(rcljava_common REQUIRED)
 find_package(rmw REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
+find_package(rosidl_cmake REQUIRED)
 
 include(CrossCompilingExtra)
 

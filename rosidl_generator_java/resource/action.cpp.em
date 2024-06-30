@@ -2,7 +2,7 @@
 @{
 import os
 
-from rosidl_cmake import expand_template
+from rosidl_pycommon import expand_template
 from rosidl_generator_c import idl_structure_type_to_c_include_prefix
 
 namespaces = action.namespaced_type.namespaces
