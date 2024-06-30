@@ -127,6 +127,10 @@ repositories:
     type: git
     url: https://github.com/ros2/rosidl.git
     version: iron
+  ros2/rosidl_core:
+    type: git
+    url: https://github.com/ros2/rosidl_core.git
+    version: iron
   ros2/rosidl_dds:
     type: git
     url: https://github.com/ros2/rosidl_dds.git
