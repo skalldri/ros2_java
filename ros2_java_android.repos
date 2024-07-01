@@ -105,7 +105,7 @@ repositories:
     version: iron
   ros2/rcutils:
     type: git
-    url: https://github.com/ros2/rcutils.git
+    url: https://github.com/skalldri/rcutils.git
     version: iron
   ros2/rmw:
     type: git
