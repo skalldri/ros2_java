@@ -151,13 +151,13 @@ public class AsyncParametersClientImpl implements AsyncParametersClient {
         request, new Consumer<Future<rcl_interfaces.srv.GetParameterTypes_Response>>() {
           public void accept(final Future<rcl_interfaces.srv.GetParameterTypes_Response> future) {
             List<ParameterType> parameterTypes = new ArrayList<ParameterType>();
-            List<Byte> pts = null;
+            byte[] pts = null;
             try {
               pts = future.get().getTypes();
             } catch (Exception e) {
               // TODO(esteve): do something
             }
-            for (Byte pt : pts) {
+            for (byte pt : pts) {
               parameterTypes.add(ParameterType.fromByte(pt));
             }
             futureResult.set(parameterTypes);

@@ -7,7 +7,10 @@ from rosidl_generator_c import idl_structure_type_to_c_include_prefix
 from rosidl_generator_java import constructor_signatures
 from rosidl_generator_java import get_java_type
 from rosidl_generator_java import get_jni_signature
+from rosidl_generator_java import get_jni_primitive_signature
 from rosidl_generator_java import get_jni_type
+from rosidl_generator_java import get_jni_array_cpp_type
+from rosidl_generator_java import get_jni_array_func
 from rosidl_generator_java import get_normalized_type
 from rosidl_generator_java import value_methods
 from rosidl_parser.definition import AbstractGenericString
@@ -222,15 +225,39 @@ JNIEXPORT jlong JNICALL Java_@(underscore_separated_jni_type_name)_getDestructor
 @{
 normalized_type = get_normalized_type(member.type)
 }@
-@[  if isinstance(member.type, AbstractNestedType)]
+  // BEGIN NEW MEMBER: @(member.name)
+@[  if isinstance(member.type, AbstractNestedType)]@
+  // AbstractNestedType
+@[    if isinstance(member.type.value_type, BasicType)]@
+  // Special optimization for BasicType
+  auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "[@(get_jni_primitive_signature(member.type.value_type))");
+@[    else]@
+  // Original unoptimized
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "L@(list_jni_type);");
+@[    end if]@
   jobject _jlist_@(member.name)_object = env->GetObjectField(_jmessage_obj, _jfield_@(member.name)_fid);
 
   if (_jlist_@(member.name)_object != nullptr) {
-    jmethodID _jlist_@(member.name)_get_mid = env->GetMethodID(_j@(list_normalized_type)_class_global, "get", "(I)Ljava/lang/Object;");
+
+@[    if isinstance(member.type.value_type, BasicType)]@
+    // BasicType
+    // This is a basic type, so construct a native array pointer for access
+    @(get_jni_array_cpp_type(member.type.value_type)) _jlist_@(member.name)_jarray = reinterpret_cast<j@(get_java_type(member.type.value_type, use_primitives=True))Array>(_jlist_@(member.name)_object);
+@[    end if]@
+
 @[    if isinstance(member.type, AbstractSequence)]@
+    // AbstractSequence
+    // Non-constant size array, need to get size by function
+
+@[      if isinstance(member.type.value_type, BasicType)]@
+    // Optimized path for BasicTypes
+    jint _jlist_@(member.name)_size = env->GetArrayLength(_jlist_@(member.name)_jarray);
+@[      else]@
+    // Unoptimized path
     jmethodID _jlist_@(member.name)_size_mid = env->GetMethodID(_j@(list_normalized_type)_class_global, "size", "()I");
     jint _jlist_@(member.name)_size = env->CallIntMethod(_jlist_@(member.name)_object, _jlist_@(member.name)_size_mid);
+@[      end if]@
+
 @[      if isinstance(member.type.value_type, AbstractString)]@
     if (!rosidl_runtime_c__String__Sequence__init(&(ros_message->@(member.name)), _jlist_@(member.name)_size)) {
       rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create String__Array ros_message");
@@ -239,28 +266,41 @@ normalized_type = get_normalized_type(member.type)
     if (!rosidl_runtime_c__U16String__Sequence__init(&(ros_message->@(member.name)), _jlist_@(member.name)_size)) {
       rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create U16String__Array ros_message");
     }
-@[      else]@
-@[        if isinstance(member.type.value_type, BasicType)]@
+@[      elif isinstance(member.type.value_type, BasicType)]@
     if (!rosidl_runtime_c__@(member.type.value_type.typename)__Sequence__init(&(ros_message->@(member.name)), _jlist_@(member.name)_size)) {
       rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create @(member.type.value_type)__Array ros_message");
     }
-@[        else]@
+@[      else]@
     if (!@('__'.join(member.type.value_type.namespaced_name()))__Sequence__init(&(ros_message->@(member.name)), _jlist_@(member.name)_size)) {
       rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create @(member.type.value_type)__Array ros_message");
-    }
-
-@[        end if]@
+    }    
 @[      end if]@
+
     auto _dest_@(member.name) = ros_message->@(member.name).data;
+@# Not an AbstractSequence
 @[    else]@
+    // !AbstractSequence
+    // Constant size array, size is known at runtime
     jint _jlist_@(member.name)_size = @(member.type.size);
 
     auto _dest_@(member.name) = ros_message->@(member.name);
+@# AbstractSequence
 @[    end if]@
+@[    if isinstance(member.type.value_type, BasicType)]@
+    // BasicType
+    // Copy the native array directly to the destination buffer in a single call
+    env->@(get_jni_array_func(member.type.value_type, 3))(_jlist_@(member.name)_jarray, 0, _jlist_@(member.name)_size, reinterpret_cast<j@(get_java_type(member.type.value_type, use_primitives=True))*>(_dest_@(member.name)));
+@[    else]@
+    // !BasicType
+    // "getter" method
+    jmethodID _jlist_@(member.name)_get_mid = env->GetMethodID(_j@(list_normalized_type)_class_global, "get", "(I)Ljava/lang/Object;");
 
+    // This is not a basic type, so we must copy it one-element-at-a-time
     for (jint i = 0; i < _jlist_@(member.name)_size; ++i) {
+      
+      // Call the List::get() function to get an element from the list
       auto element = env->CallObjectMethod(_jlist_@(member.name)_object, _jlist_@(member.name)_get_mid, i);
-@[    if isinstance(member.type.value_type, AbstractString)]@
+@[      if isinstance(member.type.value_type, AbstractString)]@
       jstring _jfield_@(member.name)_value = static_cast<jstring>(element);
       if (_jfield_@(member.name)_value != nullptr) {
         const char * _str@(member.name) = env->GetStringUTFChars(_jfield_@(member.name)_value, 0);
@@ -268,7 +308,7 @@ normalized_type = get_normalized_type(member.type)
           &_dest_@(member.name)[i], _str@(member.name));
         env->ReleaseStringUTFChars(_jfield_@(member.name)_value, _str@(member.name));
       }
-@[    elif isinstance(member.type.value_type, AbstractWString)]@
+@[      elif isinstance(member.type.value_type, AbstractWString)]@
       jstring _jfield_@(member.name)_value = static_cast<jstring>(element);
       if (_jfield_@(member.name)_value != nullptr) {
         const jchar * _str@(member.name) = env->GetStringChars(_jfield_@(member.name)_value, 0);
@@ -276,18 +316,21 @@ normalized_type = get_normalized_type(member.type)
           &_dest_@(member.name)[i], _str@(member.name));
         env->ReleaseStringChars(_jfield_@(member.name)_value, _str@(member.name));
       }
-@[    elif isinstance(member.type.value_type, BasicType)]@
-@{
-call_method_name = 'Call%sMethod' % get_java_type(member.type.value_type, use_primitives=True).capitalize()
-}@
-      _dest_@(member.name)[i] = env->@(call_method_name)(element, _j@(normalized_type)_value_global);
-@[    else]@
+@[      else]@
+      // Element is itself a complex / user-defined type. Call the respective _from_java_function()
       _dest_@(member.name)[i] = *_j@(normalized_type)_from_java_function(element, nullptr);
+@# End of type-based specialization
 @[    end if]@
+      // Free the ref to the local element, no matter what we did with it
       env->DeleteLocalRef(element);
     }
+@# End of optimization for arrays of basic-types
+@[  end if]@
+  } else {
+    rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to get @(member.name) object field");
   }
 @[  else]@
+  // !AbstractNestedType
 @[    if isinstance(member.type, AbstractGenericString)]@
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "Ljava/lang/String;");
   jstring _jvalue@(member.name) = static_cast<jstring>(env->GetObjectField(_jmessage_obj, _jfield_@(member.name)_fid));
@@ -312,7 +355,6 @@ get_method_name = 'Get%sField' % get_java_type(member.type, use_primitives=True)
 }@
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "@(jni_signature)");
   ros_message->@(member.name) = env->@(get_method_name)(_jmessage_obj, _jfield_@(member.name)_fid);
-
 @[    else]@
   auto _jfield_@(member.name)_fid = env->GetFieldID(
     _j@(msg_normalized_type)_class_global, "@(member.name)", "L@('/'.join(member.type.namespaced_name()));");
@@ -326,6 +368,8 @@ get_method_name = 'Get%sField' % get_java_type(member.type, use_primitives=True)
   env->DeleteLocalRef(_jfield_@(member.name)_obj);
 @[    end if]@
 @[  end if]@
+  // END NEW MEMBER @(member.name)
+
 @[end for]@
   assert(ros_message != nullptr);
   return ros_message;
@@ -351,20 +395,41 @@ jobject @(underscore_separated_type_name)__convert_to_java(@(msg_normalized_type
 @{
 normalized_type = get_normalized_type(member.type)
 }@
+  // BEGIN NEW MEMBER: @(member.name)
 @[  if isinstance(member.type, AbstractNestedType)]@
-@[    if isinstance(member.type.value_type, (BasicType, AbstractGenericString))]@
+  // AbstractNestedType
+@[    if isinstance(member.type.value_type, BasicType)]@
+  // BasicType
+  auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "[@(get_jni_primitive_signature(member.type.value_type))");
+  @[    if isinstance(member.type, Array)]@
+  auto _jfield_@(member.name)_array_size = @(member.type.size);
+@[      else]@
+  auto _jfield_@(member.name)_array_size = _ros_message->@(member.name).size;
+@[      end if]@
+  auto _jarray_@(member.name)_array = env->@(get_jni_array_func(member.type.value_type, 0))(_jfield_@(member.name)_array_size);
+  jobject _jarray_list_@(member.name)_obj = reinterpret_cast<jobject>(_jarray_@(member.name)_array);
+@[    elif isinstance(member.type.value_type, AbstractGenericString)]@
+  // AbstractGenericString
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "L@(list_jni_type);");
   jobject _jarray_list_@(member.name)_obj = env->NewObject(_j@(array_list_normalized_type)_class_global, _j@(array_list_normalized_type)_constructor_global);
+
   // TODO(esteve): replace ArrayList with a jobjectArray to initialize the array beforehand
   jmethodID _jlist_@(member.name)_add_mid = env->GetMethodID(_j@(array_list_normalized_type)_class_global, "add", "(Ljava/lang/Object;)Z");
+
 @[      if isinstance(member.type, Array)]@
+
   for (size_t i = 0; i < @(member.type.size); ++i) {
     auto _ros_@(member.name)_element = _ros_message->@(member.name)[i];
+
 @[      else]@
+
   for (size_t i = 0; i < _ros_message->@(member.name).size; ++i) {
     auto _ros_@(member.name)_element = _ros_message->@(member.name).data[i];
+
 @[      end if]@
+
 @[      if isinstance(member.type.value_type, AbstractGenericString)]@
+    // AbstractGenericString
     jobject _jlist_@(member.name)_element = nullptr;
     if (_ros_@(member.name)_element.data != nullptr) {
 @[        if isinstance(member.type.value_type, AbstractString)]@
@@ -374,21 +439,23 @@ normalized_type = get_normalized_type(member.type)
 @[        end if]@
     }
 @[      else]@
+
     jobject _jlist_@(member.name)_element = env->NewObject(
       _j@(normalized_type)_class_global, _j@(normalized_type)_constructor_global, _ros_@(member.name)_element);
+
 @[      end if]@
     if (_jlist_@(member.name)_element != nullptr) {
       jboolean _jlist_@(member.name)_add_result = env->CallBooleanMethod(_jarray_list_@(member.name)_obj, _jlist_@(member.name)_add_mid, _jlist_@(member.name)_element);
       assert(_jlist_@(member.name)_add_result);
     }
   }
+@# !BasicType, !AbstractGenericString
 @[    else]@
-
+  // !BasicType, !AbstractGenericString
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "L@(list_jni_type);");
   jobject _jarray_list_@(member.name)_obj = env->NewObject(_j@(array_list_normalized_type)_class_global, _j@(array_list_normalized_type)_constructor_global);
   // TODO(esteve): replace ArrayList with a jobjectArray to initialize the array beforehand
   jmethodID _jlist_@(member.name)_add_mid = env->GetMethodID(_j@(array_list_normalized_type)_class_global, "add", "(Ljava/lang/Object;)Z");
-
 @[      if isinstance(member.type, Array)]@
   for (size_t i = 0; i < @(member.type.size); ++i) {
     jobject _jlist_@(member.name)_element = _j@(normalized_type)_to_java_function(&(_ros_message->@(member.name)[i]), nullptr);
@@ -405,6 +472,7 @@ normalized_type = get_normalized_type(member.type)
   env->SetObjectField(_jmessage_obj, _jfield_@(member.name)_fid, _jarray_list_@(member.name)_obj);
   env->DeleteLocalRef(_jarray_list_@(member.name)_obj);
 @[  else]@
+  // !AbstractNestedType
 @[    if isinstance(member.type, AbstractGenericString)]@
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "Ljava/lang/String;");
   if (_ros_message->@(member.name).data != nullptr) {
@@ -419,7 +487,7 @@ normalized_type = get_normalized_type(member.type)
 jni_signature = get_jni_signature(member.type)
 set_method_name = 'Set%sField' % get_java_type(member.type, use_primitives=True).capitalize()
 }@
-  auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "@(jni_signature)");
+  auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "[@(jni_signature)");
   env->@(set_method_name)(_jmessage_obj, _jfield_@(member.name)_fid, _ros_message->@(member.name));
 @[    else]@
   auto _jfield_@(member.name)_fid = env->GetFieldID(
@@ -431,6 +499,8 @@ set_method_name = 'Set%sField' % get_java_type(member.type, use_primitives=True)
   env->SetObjectField(_jmessage_obj, _jfield_@(member.name)_fid, _jfield_@(member.name)_obj);
 @[    end if]@
 @[  end if]@
+// END NEW MEMBER: @(member.name)
+
 @[end for]@
   assert(_jmessage_obj != nullptr);
   return _jmessage_obj;

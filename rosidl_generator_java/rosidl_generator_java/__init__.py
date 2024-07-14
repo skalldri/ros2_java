@@ -18,6 +18,7 @@ import pathlib
 
 from rosidl_pycommon import generate_files
 from rosidl_pycommon import read_generator_arguments
+from rosidl_parser.definition import BoundedSequence
 from rosidl_parser.definition import AbstractGenericString
 from rosidl_parser.definition import AbstractNestedType
 from rosidl_parser.definition import BASIC_TYPES
@@ -161,6 +162,8 @@ def get_normalized_type(type_):
 def get_jni_type(type_):
     return get_java_type(type_, use_primitives=False).replace('.', '/')
 
+def get_jni_primitive_type(type_):
+    return get_java_type(type_, use_primitives=True).replace('.', '/')
 
 # JNI performance tips taken from http://planet.jboss.org/post/jni_performance_the_saga_continues
 constructor_signatures = defaultdict(lambda: '()V')
@@ -193,11 +196,65 @@ jni_signatures['java/lang/Float'] = 'F'
 jni_signatures['java/lang/Integer'] = 'I'
 jni_signatures['java/lang/Long'] = 'J'
 jni_signatures['java/lang/Short'] = 'S'
+jni_signatures['boolean'] = 'Z'
+jni_signatures['byte'] = 'B'
+jni_signatures['char'] = 'C'
+jni_signatures['double'] = 'D'
+jni_signatures['float'] = 'F'
+jni_signatures['int'] = 'I'
+jni_signatures['long'] = 'J'
+jni_signatures['short'] = 'S'
 
+# Mapping from pure-primitive types to their corresponding JNI codes
+jni_primitive_signatures = {}
+jni_primitive_signatures['boolean'] = 'Z'
+jni_primitive_signatures['byte'] = 'B'
+jni_primitive_signatures['char'] = 'C'
+jni_primitive_signatures['double'] = 'D'
+jni_primitive_signatures['float'] = 'F'
+jni_primitive_signatures['int'] = 'I'
+jni_primitive_signatures['long'] = 'J'
+jni_primitive_signatures['short'] = 'S'
+
+jni_array_access_funcs = {}
+jni_array_access_funcs['boolean'] = ("NewBooleanArray", "GetBooleanArrayElements", "ReleaseBooleanArrayElements", "GetBooleanArrayRegion", "SetBooleanArrayRegion")
+jni_array_access_funcs['byte'] = ("NewByteArray", "GetByteArrayElements", "ReleaseByteArrayElements", "GetByteArrayRegion", "SetByteArrayRegion")
+jni_array_access_funcs['char'] = ("NewCharArray", "GetCharArrayElements", "ReleaseCharArrayElements", "GetCharArrayRegion", "SetCharArrayRegion")
+jni_array_access_funcs['double'] = ("NewDoubleArray", "GetDoubleArrayElements", "ReleaseDoubleArrayElements", "GetDoubleArrayRegion", "SetDoubleArrayRegion")
+jni_array_access_funcs['float'] = ("NewFloatArray", "GetFloatArrayElements", "ReleaseFloatArrayElements", "GetFloatArrayRegion", "SetFloatArrayRegion")
+jni_array_access_funcs['int'] = ("NewIntArray", "GetIntArrayElements", "ReleaseIntArrayElements", "GetIntArrayRegion", "SetIntArrayRegion")
+jni_array_access_funcs['long'] = ("NewLongArray", "GetLongArrayElements", "ReleaseLongArrayElements", "GetLongArrayRegion", "SetLongArrayRegion")
+jni_array_access_funcs['short'] = ("NewShortArray", "GetShortArrayElements", "ReleaseShortArrayElements", "GetShortArrayRegion", "SetShortArrayRegion")
+
+# Object Arrays are special
+object_access_funcs = ("NewObjectArray", "GetObjectArrayElement", "SetObjectArrayElement")
 
 def get_jni_signature(type_):
     global jni_signatures
+    global jni_primitive_signatures
     return jni_signatures.get(get_jni_type(type_))
+
+def get_jni_primitive_signature(type_):
+    global jni_signatures
+    global jni_primitive_signatures
+    return jni_signatures.get(get_jni_primitive_type(type_))
+
+def get_jni_array_cpp_type(type_):
+    global jni_signatures
+    global jni_primitive_signatures
+    # If the type is not a primitive type, then we assume it's an object array
+    jni_type = get_jni_primitive_type(type_)
+    if jni_type not in jni_array_access_funcs:
+        raise RuntimeError(f"{jni_type} is not a primitive type and has no native array access")
+    return "j" + jni_type + "Array"
+
+
+def get_jni_array_func(type_, func_id):
+    global jni_array_access_funcs
+    jni_type = get_jni_primitive_type(type_)
+    if jni_type not in jni_array_access_funcs:
+        raise RuntimeError(f"{jni_type} is not a primitive type and has no native array access")
+    return jni_array_access_funcs[jni_type][func_id]
 
 
 def get_jni_mangled_name(fully_qualified_name):

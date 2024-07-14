@@ -757,6 +757,15 @@ public class NodeImpl implements Node {
     }
   }
 
+  public static <T> boolean contains(T[] array, T val) {
+    for (T t : array) {
+      if (t.equals(val)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public final Collection<NodeNameInfo> getNodeNames() {
     ArrayList<NodeNameInfo> nodeNames = new ArrayList();
     nativeGetNodeNames(this.handle, nodeNames);
