@@ -73,29 +73,61 @@ public final class @(type_name) implements MessageDefinition {
   }
 
 @[for constant in message.constants]@
-    public static final @(get_java_type(constant.type)) @(constant.name) = @(primitive_value_to_java(constant.type, constant.value));
+  public static final @(get_java_type(constant.type)) @(constant.name) = @(primitive_value_to_java(constant.type, constant.value));
 @[end for]@
 
 @[for member in message.structure.members]@
 
 @[  if isinstance(member.type, AbstractNestedType)]@
 @[    if member.has_annotation('default')]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+  // Optimized array implementation for basic type
+  private @(get_java_type(member.type, use_primitives=True))[] @(member.name) = @(value_to_java(member.type, member.get_annotation_value('default')['value']));
+@[      else]@
+  // Old implementation for non-basic type
   private java.util.List<@(get_java_type(member.type, use_primitives=False))> @(member.name) = java.util.Arrays.asList(new @(get_java_type(member.type, use_primitives=False))[] @(value_to_java(member.type, member.get_annotation_value('default')['value'])));
+@[      end if]@
+@# ! has_annotation('default')
 @[    else]@
 @[      if isinstance(member.type, Array)]@
+@[        if isinstance(member.type.value_type, BasicType)]@
+  // Optimized array implementation for basic type
+  private @(get_java_type(member.type, use_primitives=True))[] @(member.name) = new @(get_java_type(member.type, use_primitives=True))[@(member.type.size)];
+@[        else]@
+  // Old implementation for non-basic type
   private java.util.List<@(get_java_type(member.type, use_primitives=False))> @(member.name);
+@[        end if]@
+@# !isinstance(member.type, Array)
 @[      else]@
+@[        if isinstance(member.type.value_type, BasicType)]@
+  // Optimized array implementation for basic type
+  private @(get_java_type(member.type, use_primitives=True))[] @(member.name);
+@[        else]@
+  // Old implementation for non-basic type
   private java.util.List<@(get_java_type(member.type, use_primitives=False))> @(member.name) = new java.util.ArrayList<@(get_java_type(member.type, use_primitives=False))>();
+@[        end if]@
 @[      end if]@
 @[    end if]@
 
+@[    if isinstance(member.type.value_type, BasicType)]@
+  public final @(type_name) set@(convert_lower_case_underscore_to_camel_case(member.name))(final @(get_java_type(member.type, use_primitives=True))[] @(member.name)) {
+@[    else]@
   public final @(type_name) set@(convert_lower_case_underscore_to_camel_case(member.name))(final java.util.List<@(get_java_type(member.type, use_primitives=False))> @(member.name)) {
+@[    end if]@
 @[    if isinstance(member.type, BoundedSequence)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    if(@(member.name).length > @(member.type.maximum_size)) {
+@[      else]@
     if(@(member.name).size() > @(member.type.maximum_size)) {
+@[      end if]@
         throw new IllegalArgumentException("List too big, maximum size allowed: @(member.type.maximum_size)");
     }
 @[    elif isinstance(member.type, Array)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    if(@(member.name).length != @(member.type.size)) {
+@[      else]@
     if(@(member.name).size() != @(member.type.size)) {
+@[      end if]@
         throw new IllegalArgumentException("Invalid size for fixed array, must be exactly: @(member.type.size)");
     }
 @[    end if]@
@@ -104,6 +136,7 @@ public final class @(type_name) implements MessageDefinition {
   }
 
 @[    if isinstance(member.type.value_type, (BasicType, AbstractGenericString))]@
+/*
   public final @(type_name) set@(convert_lower_case_underscore_to_camel_case(member.name))(final @(get_java_type(member.type, use_primitives=True))[] @(member.name)) {
     java.util.List<@(get_java_type(member.type, use_primitives=False))> @(member.name)_tmp = new java.util.ArrayList<@(get_java_type(member.type, use_primitives=False))>();
     for(@(get_java_type(member.type, use_primitives=True)) @(member.name)_value : @(member.name)) {
@@ -111,11 +144,17 @@ public final class @(type_name) implements MessageDefinition {
     }
     return set@(convert_lower_case_underscore_to_camel_case(member.name))(@(member.name)_tmp);
   }
+*/
 @[    end if]@
 
+@[    if isinstance(member.type.value_type, BasicType)]@
+  public final @(get_java_type(member.type, use_primitives=True))[] get@(convert_lower_case_underscore_to_camel_case(member.name))() {
+@[    else]@
   public final java.util.List<@(get_java_type(member.type, use_primitives=False))> get@(convert_lower_case_underscore_to_camel_case(member.name))() {
+@[    end if]@
     return this.@(member.name);
   }
+
 @[  else]@
 @[    if member.has_annotation('default')]@
   private @(get_java_type(member.type)) @(member.name) = @(value_to_java(member.type, member.get_annotation_value('default')['value']));

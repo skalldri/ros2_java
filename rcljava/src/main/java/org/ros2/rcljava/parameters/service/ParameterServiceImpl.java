@@ -68,9 +68,11 @@ public class ParameterServiceImpl implements ParameterService {
               rcl_interfaces.srv.GetParameterTypes_Request request,
               rcl_interfaces.srv.GetParameterTypes_Response response) {
             List<ParameterType> types = node.getParameterTypes(request.getNames());
-            List<Byte> ptypes = new ArrayList<Byte>();
-            for (ParameterType type : types) {
-              ptypes.add(type.getValue());
+            byte[] ptypes = new byte[types.size()];
+            int i = 0;
+            for (org.ros2.rcljava.parameters.ParameterType type : types) {
+              ptypes[i] = type.getValue();
+              i++;
             }
             response.setTypes(ptypes);
           }
