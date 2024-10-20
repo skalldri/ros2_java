@@ -127,7 +127,7 @@ foreach(_jni_source ${${PROJECT_NAME}_jni_sources})
     find_library(log-lib log)
     target_link_libraries(${_target_name} ${log-lib})
   else()
-    message(FATAL_ERROR "Not compiling for Android!")
+    message(WARNING "Not compiling for Android!")
   endif()
 
   ament_export_jni_libraries(${_target_name})
