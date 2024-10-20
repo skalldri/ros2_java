@@ -44,8 +44,10 @@
 
 #else
 
-#error "Not compiling for Android!"
-// TODO: implement logging for non-Android platforms
+#define LOGE(...)
+#define LOGW(...)
+#define LOGI(...)
+#define LOGD(...)
 
 #endif
 
