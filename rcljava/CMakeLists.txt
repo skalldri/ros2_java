@@ -16,6 +16,11 @@ find_package(rosidl_cmake REQUIRED)
 
 include(CrossCompilingExtra)
 
+# Bit of a hack for now... 
+# TODO figure out a better way to do this
+find_package(termium_java REQUIRED)
+set(ENV{JAVA_HOME} ${termium_java_DIR}../../../java_home)
+
 if(CMAKE_CROSSCOMPILING)
   find_host_package(Java COMPONENTS Development REQUIRED)
 else()
