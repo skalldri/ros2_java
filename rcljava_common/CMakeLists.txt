@@ -11,6 +11,12 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 
 include(CrossCompilingExtra)
 
+# Bit of a hack for now, but download a known-good copy of 
+# Java and use it for compiling. We need super old Java to support
+# 1.6
+find_package(Termium REQUIRED)
+set(ENV{JAVA_HOME} ${termium_SOURCE_DIR})
+
 if(CMAKE_CROSSCOMPILING)
   find_host_package(Java COMPONENTS Development REQUIRED)
 else()
