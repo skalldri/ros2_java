@@ -16,7 +16,9 @@ ament_python_install_package(${PROJECT_NAME})
 # Bit of a hack for now... 
 # TODO figure out a better way to do this
 find_package(termium_java REQUIRED)
-set(ENV{JAVA_HOME} ${termium_java_DIR}../../../java_home)
+file(REAL_PATH "${termium_java_DIR}/../../../java_home" RESOLVED_TERMIUM_JAVA_HOME)
+set(JAVA_HOME "${RESOLVED_TERMIUM_JAVA_HOME}" CACHE INTERNAL "JAVA_HOME")
+set(JAVA_HOME "${RESOLVED_TERMIUM_JAVA_HOME}")
 
 if(CMAKE_CROSSCOMPILING)
   find_host_package(Java COMPONENTS Development REQUIRED)

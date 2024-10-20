@@ -14,7 +14,9 @@ include(CrossCompilingExtra)
 # Bit of a hack for now... 
 # TODO figure out a better way to do this
 find_package(termium_java REQUIRED)
-set(_JAVA_HOME ${termium_java_DIR}../../../java_home CACHE INTERNAL "_JAVA_HOME")
+file(REAL_PATH "${termium_java_DIR}/../../../java_home" RESOLVED_TERMIUM_JAVA_HOME)
+set(JAVA_HOME "${RESOLVED_TERMIUM_JAVA_HOME}" CACHE INTERNAL "JAVA_HOME")
+set(JAVA_HOME "${RESOLVED_TERMIUM_JAVA_HOME}")
 
 if(CMAKE_CROSSCOMPILING)
   find_host_package(Java COMPONENTS Development REQUIRED)
@@ -24,6 +26,9 @@ endif()
 if(NOT ANDROID)
   find_package(JNI REQUIRED)
 endif()
+
+message(FATAL_ERROR )
+
 include(UseJava)
 
 # Default to C++14
