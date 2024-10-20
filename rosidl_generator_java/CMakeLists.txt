@@ -13,6 +13,11 @@ ament_export_dependencies(rosidl_cmake)
 
 ament_python_install_package(${PROJECT_NAME})
 
+# Bit of a hack for now... 
+# TODO figure out a better way to do this
+find_package(termium_java REQUIRED)
+set(ENV{JAVA_HOME} ${termium_java_DIR}../../../java_home)
+
 if(CMAKE_CROSSCOMPILING)
   find_host_package(Java COMPONENTS Development REQUIRED)
 else()

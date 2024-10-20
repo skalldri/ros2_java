@@ -7,6 +7,8 @@
   <maintainer email="esteve@apache.org">Esteve Fernandez</maintainer>
   <license>Apache License 2.0</license>
 
+  <build_depend>termium_java</build_depend>
+
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_cmake_export_jars</buildtool_depend>
   <buildtool_depend>ament_cmake_export_libraries</buildtool_depend>

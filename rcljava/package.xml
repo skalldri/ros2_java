@@ -13,6 +13,7 @@
   <buildtool_depend>rcljava_common</buildtool_depend>
 
   <build_depend>builtin_interfaces</build_depend>
+  <build_depend>termium_java</build_depend>
   <build_depend>rcl_interfaces</build_depend>
   <build_depend>rcl</build_depend>
   <build_depend>rcpputils</build_depend>

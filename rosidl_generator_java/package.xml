@@ -23,6 +23,8 @@
   <buildtool_export_depend>rosidl_typesupport_c</buildtool_export_depend>
   <buildtool_export_depend>rosidl_typesupport_interface</buildtool_export_depend>
 
+  <build_depend>termium_java</build_depend>
+
   <exec_depend>rmw_implementation_cmake</exec_depend>
   <exec_depend>rosidl_runtime_c</exec_depend>
   <exec_depend>rosidl_parser</exec_depend>
