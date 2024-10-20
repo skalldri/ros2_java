@@ -17,6 +17,10 @@ FetchContent_GetProperties(Termium)
 
 FetchContent_MakeAvailable(Termium)
 
-install(DIRECTORY ${termium_SOURCE_DIR}/ DESTINATION java_home)
+# Ensure the ./bin directory is executable
+file(CHMOD ${termium_SOURCE_DIR}/bin/ FILE_PERMISSIONS OWNER_EXECUTE)
 
-ament_package()
+# Install all files, with matching permissions. This is critical!
+install(DIRECTORY ${termium_SOURCE_DIR}/ DESTINATION java_home USE_SOURCE_PERMISSIONS)
+
+ament_package(CONFIG_EXTRAS termium_java-extra.cmake)

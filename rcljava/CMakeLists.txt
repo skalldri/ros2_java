@@ -16,12 +16,9 @@ find_package(rosidl_cmake REQUIRED)
 
 include(CrossCompilingExtra)
 
-# Bit of a hack for now... 
-# TODO figure out a better way to do this
+# Find the special "termium_java" package, which will 
+# download a specific version of Java and override JAVA_HOME to let us find it
 find_package(termium_java REQUIRED)
-file(REAL_PATH "${termium_java_DIR}/../../../java_home" RESOLVED_TERMIUM_JAVA_HOME)
-set(JAVA_HOME "${RESOLVED_TERMIUM_JAVA_HOME}" CACHE INTERNAL "JAVA_HOME")
-set(JAVA_HOME "${RESOLVED_TERMIUM_JAVA_HOME}")
 
 if(CMAKE_CROSSCOMPILING)
   find_host_package(Java COMPONENTS Development REQUIRED)
