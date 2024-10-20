@@ -27,8 +27,6 @@ if(NOT ANDROID)
   find_package(JNI REQUIRED)
 endif()
 
-message(FATAL_ERROR )
-
 include(UseJava)
 
 # Default to C++14
