@@ -26,14 +26,19 @@ jobs:
       run: |
         rosdep update
     - uses: actions/checkout@v4.2.1
+    - name: find 1
+      run: |
+        find
     - name: Setup workspace with VCS repo file
       run: |
         mkdir -p ros2_java_ws/src
+        find
         cd ros2_java_ws
         curl -sL file://${{ github.workspace }}/ros2_java_desktop.repos | vcs import src
         # Use checked out version of ros2_java
         rm -rf src/ros2-java/ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java
+        find
     - name: Install rosdeps
       run: |
         cd ros2_java_ws
