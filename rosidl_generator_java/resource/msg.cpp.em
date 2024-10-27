@@ -105,6 +105,11 @@ elif message_c_include_prefix.endswith('__send_goal'):
     message_c_include_prefix = message_c_include_prefix[:-11]
 elif message_c_include_prefix.endswith('__get_result'):
     message_c_include_prefix = message_c_include_prefix[:-12]
+
+# Add to the set of member_includes to de-dupe, since member_includes is a set()
+# This prevents duplicate-includes being generated in some files,
+# which causes the linter to get angry
+member_includes.add(message_c_include_prefix + '.h')
 }@
 // generated from rosidl_generator_java/resource/msg.cpp.em
 // with input from @(package_name)
@@ -123,8 +128,6 @@ elif message_c_include_prefix.endswith('__get_result'):
 @[for include in member_includes]@
 #include "@(include)"
 @[end for]@
-
-#include "@(message_c_include_prefix).h"
 
 // Ensure that a jlong is big enough to store raw pointers
 static_assert(sizeof(jlong) >= sizeof(std::intptr_t), "jlong must be able to store pointers");
