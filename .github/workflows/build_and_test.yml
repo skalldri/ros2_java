@@ -15,7 +15,6 @@ jobs:
       run: |
         sudo apt-get update -qq
         sudo apt-get install -y openjdk-21-jre
-
     - name: Install libbenchmark-dev
       run: |
         sudo apt-get update -qq
@@ -32,6 +31,12 @@ jobs:
         # Use checked out version of ros2_java
         rm -rf src/ros2-java/ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java
+    - name: Install rosdeps
+      run: |
+        sudo rosdep init
+        rosdep update
+        cd ros2_java_ws
+        sudo rosdep install --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-path src
     - name: Run Colcon Build
       run: |
         cd ros2_java_ws
