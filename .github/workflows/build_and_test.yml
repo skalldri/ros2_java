@@ -14,16 +14,26 @@ jobs:
     - name: Install Java
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -y openjdk-21-jre
+        sudo apt-get install -y openjdk-21-jre libbenchmark-dev
     - uses: actions/checkout@v4.2.1
     - uses: ros-tooling/setup-ros@0.7.9
       with:
         required-ros-distributions: jazzy
-    - uses: ros-tooling/action-ros-ci@0.3.13
-      with:
-        package-name: rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
-        target-ros2-distro: jazzy
-        vcs-repo-file-url: ${{ github.workspace }}/ros2_java_desktop.repos
+    - name: Setup workspace with VCS repo file
+      run: |
+        mkdir -p ros2_java_ws/src
+        cd ros2_java_ws
+        curl -sL file://${{ github.workspace }}/ros2_java_desktop.repos | vcs import src
+        # Use checked out version of ros2_java
+        rm -rf src/ros2-java/ros2_java
+        ln --symbolic ${{ github.workspace }} src/ros2-java
+    - name: Run Colcon Build
+      run: |
+        cd ros2_java_ws
+        colcon build --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
+    - name: Run Colcon Test
+      run: |
+        colcon test --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
 
   build_and_test_android:
     runs-on: ubuntu-24.04

@@ -11,7 +11,7 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 
 include(CrossCompilingExtra)
 
-# Find the special "termium_java" package, which will 
+# Find the special "termium_java" package, which will
 # download a specific version of Java and override JAVA_HOME to let us find it
 find_package(termium_java REQUIRED)
 
