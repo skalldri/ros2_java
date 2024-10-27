@@ -33,7 +33,6 @@ jobs:
         ln --symbolic ${{ github.workspace }} src/ros2-java
     - name: Install rosdeps
       run: |
-        sudo rosdep init
         rosdep update
         cd ros2_java_ws
         sudo rosdep install --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-path src
