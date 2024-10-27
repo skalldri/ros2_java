@@ -22,6 +22,8 @@ find_package(rcljava_common REQUIRED)
 
 include(CrossCompilingExtra)
 
+find_package(termium_java REQUIRED)
+
 if(CMAKE_CROSSCOMPILING)
   find_host_package(Java COMPONENTS Development REQUIRED)
 else()

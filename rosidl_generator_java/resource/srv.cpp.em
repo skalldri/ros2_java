@@ -33,7 +33,9 @@ expand_template(
     data,
     output_file)
 }@
-
+// generated from rosidl_generator_java/resource/srv.cpp.em
+// with input from @(package_name)
+// generated code does not contain a copyright notice
 #include <jni.h>
 
 #include <cstdint>
@@ -83,6 +85,6 @@ JNIEXPORT jlong JNICALL Java_@(underscore_separated_jni_type_name)_getServiceTyp
 JNIEXPORT jlong JNICALL Java_@(underscore_separated_jni_type_name)_getServiceTypeSupport(JNIEnv *, jclass)
 {
   const rosidl_service_type_support_t * ts = ROSIDL_GET_SRV_TYPE_SUPPORT(
-    @(','.join(service_fqn)));
+    @(', '.join(service_fqn)));
   return reinterpret_cast<jlong>(ts);
 }

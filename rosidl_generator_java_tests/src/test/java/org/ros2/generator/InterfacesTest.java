@@ -63,14 +63,14 @@ public class InterfacesTest {
 
   @Test
   public final void testEmpty() {
-    rosidl_generator_java.msg.Empty empty = new rosidl_generator_java.msg.Empty();
+    rosidl_generator_java_tests.msg.Empty empty = new rosidl_generator_java_tests.msg.Empty();
     assertNotEquals(null, empty);
   }
 
   @Test
   public final void testBasicTypes() {
     // Test setting/getting positive values
-    rosidl_generator_java.msg.BasicTypes basicTypesOne = new rosidl_generator_java.msg.BasicTypes();
+    rosidl_generator_java_tests.msg.BasicTypes basicTypesOne = new rosidl_generator_java_tests.msg.BasicTypes();
     boolean expectedBool1 = true;
     basicTypesOne.setBoolValue(expectedBool1);
     byte expectedByte1 = 123;
@@ -101,7 +101,7 @@ public class InterfacesTest {
     assertEquals(expectedInt641, basicTypesOne.getInt64Value());
 
     // Test setting/getting negative values
-    rosidl_generator_java.msg.BasicTypes basicTypesTwo = new rosidl_generator_java.msg.BasicTypes();
+    rosidl_generator_java_tests.msg.BasicTypes basicTypesTwo = new rosidl_generator_java_tests.msg.BasicTypes();
     boolean expectedBool2 = false;
     basicTypesTwo.setBoolValue(expectedBool2);
     byte expectedByte2 = -42;
@@ -134,26 +134,26 @@ public class InterfacesTest {
 
   @Test
   public final void testConstants() {
-    assertEquals(true, rosidl_generator_java.msg.Constants.BOOL_CONST);
-    assertEquals(50, rosidl_generator_java.msg.Constants.BYTE_CONST);
-    assertEquals(100, rosidl_generator_java.msg.Constants.CHAR_CONST);
-    assertEquals(1.125f, rosidl_generator_java.msg.Constants.FLOAT32_CONST, 0.01f);
-    assertEquals(1.125, rosidl_generator_java.msg.Constants.FLOAT64_CONST, 0.01);
-    assertEquals(-50, rosidl_generator_java.msg.Constants.INT8_CONST);
-    assertEquals((byte) 200, rosidl_generator_java.msg.Constants.UINT8_CONST);
-    assertEquals(-1000, rosidl_generator_java.msg.Constants.INT16_CONST);
-    assertEquals(2000, rosidl_generator_java.msg.Constants.UINT16_CONST);
-    assertEquals(-30000, rosidl_generator_java.msg.Constants.INT32_CONST);
-    assertEquals(60000, rosidl_generator_java.msg.Constants.UINT32_CONST);
-    assertEquals(-40000000, rosidl_generator_java.msg.Constants.INT64_CONST);
-    assertEquals(50000000, rosidl_generator_java.msg.Constants.UINT64_CONST);
+    assertEquals(true, rosidl_generator_java_tests.msg.Constants.BOOL_CONST);
+    assertEquals(50, rosidl_generator_java_tests.msg.Constants.BYTE_CONST);
+    assertEquals(100, rosidl_generator_java_tests.msg.Constants.CHAR_CONST);
+    assertEquals(1.125f, rosidl_generator_java_tests.msg.Constants.FLOAT32_CONST, 0.01f);
+    assertEquals(1.125, rosidl_generator_java_tests.msg.Constants.FLOAT64_CONST, 0.01);
+    assertEquals(-50, rosidl_generator_java_tests.msg.Constants.INT8_CONST);
+    assertEquals((byte) 200, rosidl_generator_java_tests.msg.Constants.UINT8_CONST);
+    assertEquals(-1000, rosidl_generator_java_tests.msg.Constants.INT16_CONST);
+    assertEquals(2000, rosidl_generator_java_tests.msg.Constants.UINT16_CONST);
+    assertEquals(-30000, rosidl_generator_java_tests.msg.Constants.INT32_CONST);
+    assertEquals(60000, rosidl_generator_java_tests.msg.Constants.UINT32_CONST);
+    assertEquals(-40000000, rosidl_generator_java_tests.msg.Constants.INT64_CONST);
+    assertEquals(50000000, rosidl_generator_java_tests.msg.Constants.UINT64_CONST);
 
-    assertEquals("Hello world!", rosidl_generator_java.msg.Strings.STRING_CONST);
+    assertEquals("Hello world!", rosidl_generator_java_tests.msg.Strings.STRING_CONST);
   }
 
   @Test
   public final void testDefaultValues() {
-    rosidl_generator_java.msg.Defaults defaults = new rosidl_generator_java.msg.Defaults();
+    rosidl_generator_java_tests.msg.Defaults defaults = new rosidl_generator_java_tests.msg.Defaults();
     assertEquals(true, defaults.getBoolValue());
     assertEquals(50, defaults.getByteValue());
     assertEquals(100, defaults.getCharValue());
@@ -168,7 +168,7 @@ public class InterfacesTest {
     assertEquals(-40000000, defaults.getInt64Value());
     assertEquals(50000000, defaults.getUint64Value());
 
-    rosidl_generator_java.msg.Strings strings = new rosidl_generator_java.msg.Strings();
+    rosidl_generator_java_tests.msg.Strings strings = new rosidl_generator_java_tests.msg.Strings();
     assertEquals("Hello world!", strings.getStringValueDefault1());
     assertEquals("Hello'world!", strings.getStringValueDefault2());
     assertEquals("Hello\"world!", strings.getStringValueDefault3());
@@ -183,7 +183,7 @@ public class InterfacesTest {
 
   @Test
   public final void testCheckStringConstraints() {
-    rosidl_generator_java.msg.Strings strings = new rosidl_generator_java.msg.Strings();
+    rosidl_generator_java_tests.msg.Strings strings = new rosidl_generator_java_tests.msg.Strings();
     strings.setStringValue("test");
     assertEquals("test", strings.getStringValue());
 
@@ -203,7 +203,7 @@ public class InterfacesTest {
 
   @Test
   public final void testArrays() {
-    rosidl_generator_java.msg.Arrays arrays = new rosidl_generator_java.msg.Arrays();
+    rosidl_generator_java_tests.msg.Arrays arrays = new rosidl_generator_java_tests.msg.Arrays();
 
     // This value should not change and is asserted at end of test
     arrays.setAlignmentCheck(42);
@@ -295,34 +295,34 @@ public class InterfacesTest {
       () -> arrays.setStringValues(Arrays.asList("too", "few")));
 
     // Test setting/getting fixed length arrays of nested types
-    rosidl_generator_java.msg.BasicTypes basicTypes = new rosidl_generator_java.msg.BasicTypes();
+    rosidl_generator_java_tests.msg.BasicTypes basicTypes = new rosidl_generator_java_tests.msg.BasicTypes();
     List basicTypesList = Arrays.asList(
-        new rosidl_generator_java.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes});
+        new rosidl_generator_java_tests.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes});
     arrays.setBasicTypesValues(basicTypesList);
     assertEquals(basicTypesList, arrays.getBasicTypesValues());
     assertThrows(IllegalArgumentException.class,
-      () -> arrays.setBasicTypesValues(Arrays.asList(new rosidl_generator_java.msg.BasicTypes[] {basicTypes})));
-    rosidl_generator_java.msg.Constants constants = new rosidl_generator_java.msg.Constants();
+      () -> arrays.setBasicTypesValues(Arrays.asList(new rosidl_generator_java_tests.msg.BasicTypes[] {basicTypes})));
+    rosidl_generator_java_tests.msg.Constants constants = new rosidl_generator_java_tests.msg.Constants();
     List constantsList = Arrays.asList(
-        new rosidl_generator_java.msg.Constants[] {constants, constants, constants});
+        new rosidl_generator_java_tests.msg.Constants[] {constants, constants, constants});
     arrays.setConstantsValues(constantsList);
     assertEquals(constantsList, arrays.getConstantsValues());
     assertThrows(IllegalArgumentException.class,
-      () -> arrays.setConstantsValues(Arrays.asList(new rosidl_generator_java.msg.Constants[] {constants})));
-    rosidl_generator_java.msg.Defaults defaults = new rosidl_generator_java.msg.Defaults();
+      () -> arrays.setConstantsValues(Arrays.asList(new rosidl_generator_java_tests.msg.Constants[] {constants})));
+    rosidl_generator_java_tests.msg.Defaults defaults = new rosidl_generator_java_tests.msg.Defaults();
     List defaultsList = Arrays.asList(
-        new rosidl_generator_java.msg.Defaults[] {defaults, defaults, defaults});
+        new rosidl_generator_java_tests.msg.Defaults[] {defaults, defaults, defaults});
     arrays.setDefaultsValues(defaultsList);
     assertEquals(defaultsList, arrays.getDefaultsValues());
     assertThrows(IllegalArgumentException.class,
-      () -> arrays.setDefaultsValues(Arrays.asList(new rosidl_generator_java.msg.Defaults[] {defaults})));
+      () -> arrays.setDefaultsValues(Arrays.asList(new rosidl_generator_java_tests.msg.Defaults[] {defaults})));
 
     assertEquals(42, arrays.getAlignmentCheck());
   }
 
   @Test
   public final void testBoundedSequences() {
-    rosidl_generator_java.msg.BoundedSequences bounded_seq = new rosidl_generator_java.msg.BoundedSequences();
+    rosidl_generator_java_tests.msg.BoundedSequences bounded_seq = new rosidl_generator_java_tests.msg.BoundedSequences();
 
     // This value should not change and is asserted at end of test
     bounded_seq.setAlignmentCheck(42);
@@ -468,49 +468,49 @@ public class InterfacesTest {
       () -> bounded_seq.setStringValues(Arrays.asList("too", "many", "values", "!")));
 
     // Test setting/getting fixed length bounded_seq of nested types
-    rosidl_generator_java.msg.BasicTypes basicTypes = new rosidl_generator_java.msg.BasicTypes();
+    rosidl_generator_java_tests.msg.BasicTypes basicTypes = new rosidl_generator_java_tests.msg.BasicTypes();
     List basicTypesList = Arrays.asList(
-        new rosidl_generator_java.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes});
+        new rosidl_generator_java_tests.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes});
     bounded_seq.setBasicTypesValues(basicTypesList);
     assertEquals(basicTypesList, bounded_seq.getBasicTypesValues());
     List basicTypesListShort = Arrays.asList(
-        new rosidl_generator_java.msg.BasicTypes[] {basicTypes});
+        new rosidl_generator_java_tests.msg.BasicTypes[] {basicTypes});
     bounded_seq.setBasicTypesValues(basicTypesListShort);
     assertEquals(basicTypesListShort, bounded_seq.getBasicTypesValues());
     assertThrows(IllegalArgumentException.class,
       () -> bounded_seq.setBasicTypesValues(
-          Arrays.asList(new rosidl_generator_java.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes, basicTypes})));
-    rosidl_generator_java.msg.Constants constants = new rosidl_generator_java.msg.Constants();
+          Arrays.asList(new rosidl_generator_java_tests.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes, basicTypes})));
+    rosidl_generator_java_tests.msg.Constants constants = new rosidl_generator_java_tests.msg.Constants();
     List constantsList = Arrays.asList(
-        new rosidl_generator_java.msg.Constants[] {constants, constants, constants});
+        new rosidl_generator_java_tests.msg.Constants[] {constants, constants, constants});
     bounded_seq.setConstantsValues(constantsList);
     assertEquals(constantsList, bounded_seq.getConstantsValues());
     List constantsListShort = Arrays.asList(
-        new rosidl_generator_java.msg.Constants[] {constants});
+        new rosidl_generator_java_tests.msg.Constants[] {constants});
     bounded_seq.setConstantsValues(constantsListShort);
     assertEquals(constantsListShort, bounded_seq.getConstantsValues());
     assertThrows(IllegalArgumentException.class,
       () -> bounded_seq.setConstantsValues(
-          Arrays.asList(new rosidl_generator_java.msg.Constants[] {constants, constants, constants, constants})));
-    rosidl_generator_java.msg.Defaults defaults = new rosidl_generator_java.msg.Defaults();
+          Arrays.asList(new rosidl_generator_java_tests.msg.Constants[] {constants, constants, constants, constants})));
+    rosidl_generator_java_tests.msg.Defaults defaults = new rosidl_generator_java_tests.msg.Defaults();
     List defaultsList = Arrays.asList(
-        new rosidl_generator_java.msg.Defaults[] {defaults, defaults, defaults});
+        new rosidl_generator_java_tests.msg.Defaults[] {defaults, defaults, defaults});
     bounded_seq.setDefaultsValues(defaultsList);
     assertEquals(defaultsList, bounded_seq.getDefaultsValues());
     List defaultsListShort = Arrays.asList(
-        new rosidl_generator_java.msg.Defaults[] {defaults, defaults, defaults});
+        new rosidl_generator_java_tests.msg.Defaults[] {defaults, defaults, defaults});
     bounded_seq.setDefaultsValues(defaultsListShort);
     assertEquals(defaultsListShort, bounded_seq.getDefaultsValues());
     assertThrows(IllegalArgumentException.class,
       () -> bounded_seq.setDefaultsValues(
-          Arrays.asList(new rosidl_generator_java.msg.Defaults[] {defaults, defaults, defaults, defaults})));
+          Arrays.asList(new rosidl_generator_java_tests.msg.Defaults[] {defaults, defaults, defaults, defaults})));
 
     assertEquals(42, bounded_seq.getAlignmentCheck());
   }
 
   @Test
   public final void testUnboundedSequences() {
-    rosidl_generator_java.msg.UnboundedSequences unbounded_seq = new rosidl_generator_java.msg.UnboundedSequences();
+    rosidl_generator_java_tests.msg.UnboundedSequences unbounded_seq = new rosidl_generator_java_tests.msg.UnboundedSequences();
 
     // This value should not change and is asserted at end of test
     unbounded_seq.setAlignmentCheck(42);
@@ -562,19 +562,19 @@ public class InterfacesTest {
     assertEquals(stringList, unbounded_seq.getStringValues());
 
     // Test setting/getting fixed length unbounded_seq of nested types
-    rosidl_generator_java.msg.BasicTypes basicTypes = new rosidl_generator_java.msg.BasicTypes();
+    rosidl_generator_java_tests.msg.BasicTypes basicTypes = new rosidl_generator_java_tests.msg.BasicTypes();
     List basicTypesList = Arrays.asList(
-        new rosidl_generator_java.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes});
+        new rosidl_generator_java_tests.msg.BasicTypes[] {basicTypes, basicTypes, basicTypes});
     unbounded_seq.setBasicTypesValues(basicTypesList);
     assertEquals(basicTypesList, unbounded_seq.getBasicTypesValues());
-    rosidl_generator_java.msg.Constants constants = new rosidl_generator_java.msg.Constants();
+    rosidl_generator_java_tests.msg.Constants constants = new rosidl_generator_java_tests.msg.Constants();
     List constantsList = Arrays.asList(
-        new rosidl_generator_java.msg.Constants[] {constants, constants, constants});
+        new rosidl_generator_java_tests.msg.Constants[] {constants, constants, constants});
     unbounded_seq.setConstantsValues(constantsList);
     assertEquals(constantsList, unbounded_seq.getConstantsValues());
-    rosidl_generator_java.msg.Defaults defaults = new rosidl_generator_java.msg.Defaults();
+    rosidl_generator_java_tests.msg.Defaults defaults = new rosidl_generator_java_tests.msg.Defaults();
     List defaultsList = Arrays.asList(
-        new rosidl_generator_java.msg.Defaults[] {defaults, defaults, defaults});
+        new rosidl_generator_java_tests.msg.Defaults[] {defaults, defaults, defaults});
     unbounded_seq.setDefaultsValues(defaultsList);
     assertEquals(defaultsList, unbounded_seq.getDefaultsValues());
 
@@ -583,10 +583,10 @@ public class InterfacesTest {
 
   @Test
   public final void testBasicTypesService() {
-    rosidl_generator_java.srv.BasicTypes_Request basicTypesRequest =
-      new rosidl_generator_java.srv.BasicTypes_Request();
-    rosidl_generator_java.srv.BasicTypes_Response basicTypesResponse =
-      new rosidl_generator_java.srv.BasicTypes_Response();
+    rosidl_generator_java_tests.srv.BasicTypes_Request basicTypesRequest =
+      new rosidl_generator_java_tests.srv.BasicTypes_Request();
+    rosidl_generator_java_tests.srv.BasicTypes_Response basicTypesResponse =
+      new rosidl_generator_java_tests.srv.BasicTypes_Response();
     // Set request fields
     boolean expectedBool1 = true;
     basicTypesRequest.setBoolValue(expectedBool1);

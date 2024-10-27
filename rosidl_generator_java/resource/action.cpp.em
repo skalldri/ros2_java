@@ -83,7 +83,9 @@ expand_template(
     data,
     output_file)
 }@
-
+// generated from rosidl_generator_java/resource/msg.cpp.em
+// with input from @(package_name)
+// generated code does not contain a copyright notice
 #include <jni.h>
 
 #include <cstdint>

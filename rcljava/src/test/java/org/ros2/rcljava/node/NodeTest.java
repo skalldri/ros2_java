@@ -303,19 +303,19 @@ public class NodeTest {
 
     rcljava.msg.BoundedArrayPrimitives msg = new rcljava.msg.BoundedArrayPrimitives();
 
-    List<Boolean> boolValues = Arrays.asList(new Boolean[] {true, false, true});
-    List<Byte> byteValues = Arrays.asList(new Byte[] {123, 42});
-    List<Byte> charValues = Arrays.asList(new Byte[] {'\u0012', '\u0021'});
-    List<Float> float32Values = Arrays.asList(new Float[] {12.34f, 13.34f});
-    List<Double> float64Values = Arrays.asList(new Double[] {43.21, 44.21});
-    List<Byte> int8Values = Arrays.asList(new Byte[] {-12, -13});
-    List<Byte> uint8Values = Arrays.asList(new Byte[] {34, 35});
-    List<Short> int16Values = Arrays.asList(new Short[] {-1234, -1235});
-    List<Short> uint16Values = Arrays.asList(new Short[] {4321, 4322});
-    List<Integer> int32Values = Arrays.asList(new Integer[] {-75536, -75537});
-    List<Integer> uint32Values = Arrays.asList(new Integer[] {85536, 85537});
-    List<Long> int64Values = Arrays.asList(new Long[] {-5294967296l, -5294967297l});
-    List<Long> uint64Values = Arrays.asList(new Long[] {6294967296l, 6294967297l});
+    boolean[] boolValues = {true, false, true};
+    byte[] byteValues = {123, 42};
+    byte[] charValues = {'\u0012', '\u0021'};
+    float[] float32Values = {12.34f, 13.34f};
+    double[] float64Values = {43.21, 44.21};
+    byte[] int8Values = {-12, -13};
+    byte[] uint8Values = {34, 35};
+    short[] int16Values = {-1234, -1235};
+    short[] uint16Values = {4321, 4322};
+    int[] int32Values = {-75536, -75537};
+    int[] uint32Values = {85536, 85537};
+    long[] int64Values = {-5294967296l, -5294967297l};
+    long[] uint64Values = {6294967296l, 6294967297l};
     List<String> stringValues = Arrays.asList(new String[] {"hello world", "bye world"});
 
     msg.setBoolValues(boolValues);
@@ -465,19 +465,19 @@ public class NodeTest {
 
     rcljava.msg.DynamicArrayPrimitives msg = new rcljava.msg.DynamicArrayPrimitives();
 
-    List<Boolean> boolValues = Arrays.asList(new Boolean[] {true, false, true});
-    List<Byte> byteValues = Arrays.asList(new Byte[] {123, 42});
-    List<Byte> charValues = Arrays.asList(new Byte[] {'\u0012', '\u0021'});
-    List<Float> float32Values = Arrays.asList(new Float[] {12.34f, 13.34f});
-    List<Double> float64Values = Arrays.asList(new Double[] {43.21, 44.21});
-    List<Byte> int8Values = Arrays.asList(new Byte[] {-12, -13});
-    List<Byte> uint8Values = Arrays.asList(new Byte[] {34, 35});
-    List<Short> int16Values = Arrays.asList(new Short[] {-1234, -1235});
-    List<Short> uint16Values = Arrays.asList(new Short[] {4321, 4322});
-    List<Integer> int32Values = Arrays.asList(new Integer[] {-75536, -75537});
-    List<Integer> uint32Values = Arrays.asList(new Integer[] {85536, 85537});
-    List<Long> int64Values = Arrays.asList(new Long[] {-5294967296l, -5294967297l});
-    List<Long> uint64Values = Arrays.asList(new Long[] {6294967296l, 6294967297l});
+    boolean[] boolValues = {true, false, true};
+    byte[] byteValues = {123, 42};
+    byte[] charValues = {'\u0012', '\u0021'};
+    float[] float32Values = {12.34f, 13.34f};
+    double[] float64Values = {43.21, 44.21};
+    byte[] int8Values = {-12, -13};
+    byte[] uint8Values = {34, 35};
+    short[] int16Values = {-1234, -1235};
+    short[] uint16Values = {4321, 4322};
+    int[] int32Values = {-75536, -75537};
+    int[] uint32Values = {85536, 85537};
+    long[] int64Values = {-5294967296l, -5294967297l};
+    long[] uint64Values = {6294967296l, 6294967297l};
     List<String> stringValues = Arrays.asList(new String[] {"hello world", "bye world"});
 
     msg.setBoolValues(boolValues);
@@ -731,19 +731,19 @@ public class NodeTest {
 
     rcljava.msg.StaticArrayPrimitives msg = new rcljava.msg.StaticArrayPrimitives();
 
-    List<Boolean> boolValues = Arrays.asList(new Boolean[] {true, false, true});
-    List<Byte> byteValues = Arrays.asList(new Byte[] {123, 42, 24});
-    List<Byte> charValues = Arrays.asList(new Byte[] {'\u0012', '\u0021', '\u0008'});
-    List<Float> float32Values = Arrays.asList(new Float[] {12.34f, 13.34f, 14.34f});
-    List<Double> float64Values = Arrays.asList(new Double[] {43.21, 54.21, 65.21});
-    List<Byte> int8Values = Arrays.asList(new Byte[] {-12, -13, -14});
-    List<Byte> uint8Values = Arrays.asList(new Byte[] {34, 35, 36});
-    List<Short> int16Values = Arrays.asList(new Short[] {-1234, -1235, -1236});
-    List<Short> uint16Values = Arrays.asList(new Short[] {4321, 4322, 4323});
-    List<Integer> int32Values = Arrays.asList(new Integer[] {-75536, -75537, -75532});
-    List<Integer> uint32Values = Arrays.asList(new Integer[] {85536, 85537, 85535});
-    List<Long> int64Values = Arrays.asList(new Long[] {-5294967296l, -5294967297l, -5294967295l});
-    List<Long> uint64Values = Arrays.asList(new Long[] {6294967296l, 6294967297l, 6294967296l});
+    boolean[] boolValues = {true, false, true};
+    byte[] byteValues = {123, 42, 24};
+    byte[] charValues = {'\u0012', '\u0021', '\u0008'};
+    float[] float32Values = {12.34f, 13.34f, 14.34f};
+    double[] float64Values = {43.21, 54.21, 65.21};
+    byte[] int8Values = {-12, -13, -14};
+    byte[] uint8Values = {34, 35, 36};
+    short[] int16Values = {-1234, -1235, -1236};
+    short[] uint16Values = {4321, 4322, 4323};
+    int[] int32Values = {-75536, -75537, -75532};
+    int[] uint32Values = {85536, 85537, 85535};
+    long[] int64Values = {-5294967296l, -5294967297l, -5294967295l};
+    long[] uint64Values = {6294967296l, 6294967297l, 6294967296l};
     List<String> stringValues =
         Arrays.asList(new String[] {"hello world", "bye world", "hey world"});
 

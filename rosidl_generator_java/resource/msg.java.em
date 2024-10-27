@@ -101,7 +101,7 @@ public final class @(type_name) implements MessageDefinition {
 @[      else]@
 @[        if isinstance(member.type.value_type, BasicType)]@
   // Optimized array implementation for basic type
-  private @(get_java_type(member.type, use_primitives=True))[] @(member.name);
+  private @(get_java_type(member.type, use_primitives=True))[] @(member.name) = {};
 @[        else]@
   // Old implementation for non-basic type
   private java.util.List<@(get_java_type(member.type, use_primitives=False))> @(member.name) = new java.util.ArrayList<@(get_java_type(member.type, use_primitives=False))>();

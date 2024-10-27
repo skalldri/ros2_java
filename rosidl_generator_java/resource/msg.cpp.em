@@ -106,7 +106,9 @@ elif message_c_include_prefix.endswith('__send_goal'):
 elif message_c_include_prefix.endswith('__get_result'):
     message_c_include_prefix = message_c_include_prefix[:-12]
 }@
-
+// generated from rosidl_generator_java/resource/msg.cpp.em
+// with input from @(package_name)
+// generated code does not contain a copyright notice
 #include <jni.h>
 
 #include <cassert>
@@ -238,13 +240,11 @@ normalized_type = get_normalized_type(member.type)
   jobject _jlist_@(member.name)_object = env->GetObjectField(_jmessage_obj, _jfield_@(member.name)_fid);
 
   if (_jlist_@(member.name)_object != nullptr) {
-
 @[    if isinstance(member.type.value_type, BasicType)]@
     // BasicType
     // This is a basic type, so construct a native array pointer for access
     @(get_jni_array_cpp_type(member.type.value_type)) _jlist_@(member.name)_jarray = reinterpret_cast<j@(get_java_type(member.type.value_type, use_primitives=True))Array>(_jlist_@(member.name)_object);
 @[    end if]@
-
 @[    if isinstance(member.type, AbstractSequence)]@
     // AbstractSequence
     // Non-constant size array, need to get size by function
@@ -273,7 +273,7 @@ normalized_type = get_normalized_type(member.type)
 @[      else]@
     if (!@('__'.join(member.type.value_type.namespaced_name()))__Sequence__init(&(ros_message->@(member.name)), _jlist_@(member.name)_size)) {
       rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to create @(member.type.value_type)__Array ros_message");
-    }    
+    }
 @[      end if]@
 
     auto _dest_@(member.name) = ros_message->@(member.name).data;
@@ -289,7 +289,7 @@ normalized_type = get_normalized_type(member.type)
 @[    if isinstance(member.type.value_type, BasicType)]@
     // BasicType
     // Copy the native array directly to the destination buffer in a single call
-    env->@(get_jni_array_func(member.type.value_type, 3))(_jlist_@(member.name)_jarray, 0, _jlist_@(member.name)_size, reinterpret_cast<j@(get_java_type(member.type.value_type, use_primitives=True))*>(_dest_@(member.name)));
+    env->@(get_jni_array_func(member.type.value_type, 3))(_jlist_@(member.name)_jarray, 0, _jlist_@(member.name)_size, reinterpret_cast<j@(get_java_type(member.type.value_type, use_primitives=True)) *>(_dest_@(member.name)));
 @[    else]@
     // !BasicType
     // "getter" method
@@ -297,7 +297,6 @@ normalized_type = get_normalized_type(member.type)
 
     // This is not a basic type, so we must copy it one-element-at-a-time
     for (jint i = 0; i < _jlist_@(member.name)_size; ++i) {
-      
       // Call the List::get() function to get an element from the list
       auto element = env->CallObjectMethod(_jlist_@(member.name)_object, _jlist_@(member.name)_get_mid, i);
 @[      if isinstance(member.type.value_type, AbstractString)]@
@@ -413,7 +412,7 @@ normalized_type = get_normalized_type(member.type)
 @[      else]@
   auto _ros_@(member.name)_element = _ros_message->@(member.name).data;
 @[      end if]@
-  env->@(get_jni_array_func(member.type.value_type, 4))(_jarray_@(member.name)_array, 0, _jfield_@(member.name)_array_size, reinterpret_cast<j@(get_java_type(member.type.value_type, use_primitives=True))*>(_ros_@(member.name)_element));
+  env->@(get_jni_array_func(member.type.value_type, 4))(_jarray_@(member.name)_array, 0, _jfield_@(member.name)_array_size, reinterpret_cast<j@(get_java_type(member.type.value_type, use_primitives=True)) *>(_ros_@(member.name)_element));
 @[    elif isinstance(member.type.value_type, AbstractGenericString)]@
   // AbstractGenericString
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "L@(list_jni_type);");
@@ -624,7 +623,7 @@ JNIEXPORT jlong JNICALL Java_@(underscore_separated_jni_type_name)_getToJavaConv
 
 JNIEXPORT jlong JNICALL Java_@(underscore_separated_jni_type_name)_getTypeSupport(JNIEnv *, jclass)
 {
-  jlong ptr = reinterpret_cast<jlong>(ROSIDL_GET_MSG_TYPE_SUPPORT(@(','.join(message.structure.namespaced_type.namespaced_name()))));
+  jlong ptr = reinterpret_cast<jlong>(ROSIDL_GET_MSG_TYPE_SUPPORT(@(', '.join(message.structure.namespaced_type.namespaced_name()))));
   return ptr;
 }
 

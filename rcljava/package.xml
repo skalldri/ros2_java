@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>rcljava</name>
   <version>0.0.3</version>
   <description>Package containing the Java client.</description>
@@ -19,14 +19,17 @@
   <build_depend>rcpputils</build_depend>
   <build_depend>rmw_implementation_cmake</build_depend>
   <build_depend>rmw</build_depend>
+  <build_depend>rosidl_generator_java</build_depend>
   <build_depend>rosidl_generator_c</build_depend>
   <build_depend>rosidl_typesupport_c</build_depend>
+
   <build_export_depend>builtin_interfaces</build_export_depend>
   <build_export_depend>rcl_interfaces</build_export_depend>
   <build_export_depend>rmw</build_export_depend>
   <build_export_depend>rosidl_runtime_c</build_export_depend>
   <build_export_depend>rosidl_generator_java</build_export_depend>
-  <build_export_depend>rosidl_typesupport_c</build_export_depend>
+
+  <build_export_depend>rosidl_typesupport_c</build_export_depend> 
 
   <exec_depend>builtin_interfaces</exec_depend>
   <exec_depend>rcl_interfaces</exec_depend>
