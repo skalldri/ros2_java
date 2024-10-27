@@ -35,7 +35,7 @@ jobs:
       run: |
         rosdep update
         cd ros2_java_ws
-        sudo rosdep install --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-path src
+        rosdep install --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-path src
     - name: Run Colcon Build
       run: |
         cd ros2_java_ws
