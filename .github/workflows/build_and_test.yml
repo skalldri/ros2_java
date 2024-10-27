@@ -19,10 +19,10 @@ jobs:
       run: |
         sudo apt-get update -qq
         sudo apt-get install -y libbenchmark-dev
-    - uses: actions/checkout@v4.2.1
     - uses: ros-tooling/setup-ros@0.7.9
       with:
         required-ros-distributions: jazzy
+    - uses: actions/checkout@v4.2.1
     - name: Setup workspace with VCS repo file
       run: |
         mkdir -p ros2_java_ws/src
@@ -35,7 +35,10 @@ jobs:
       run: |
         rosdep update
         cd ros2_java_ws
-        rosdep install --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-path src
+        echo "rosdep check --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-paths src"
+        rosdep check --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-paths src
+        echo "rosdep install --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-paths src"
+        rosdep install --ignore-src --rosdistro=jazzy --filter-for-installers=apt -r --default-yes --from-paths src
     - name: Run Colcon Build
       run: |
         cd ros2_java_ws
