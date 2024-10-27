@@ -21,7 +21,7 @@ jobs:
         required-ros-distributions: jazzy
     - uses: ros-tooling/action-ros-ci@0.3.13
       with:
-        package-name: rosidl_generator_java rcljava_common rcljava
+        package-name: rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
         target-ros2-distro: jazzy
         vcs-repo-file-url: ${{ github.workspace }}/ros2_java_desktop.repos
 
