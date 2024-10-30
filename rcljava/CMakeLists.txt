@@ -17,7 +17,7 @@ find_package(rosidl_generator_java REQUIRED)
 
 include(CrossCompilingExtra)
 
-# Find the special "termium_java" package, which will 
+# Find the special "termium_java" package, which will
 # download a specific version of Java and override JAVA_HOME to let us find it
 find_package(termium_java REQUIRED)
 
@@ -122,7 +122,7 @@ foreach(_jni_source ${${PROJECT_NAME}_jni_sources})
     PUBLIC
     ${JNI_INCLUDE_DIRS}
   )
-  
+
   if(ANDROID)
     # On Android, link against the android logging library
     find_library(log-lib log)

@@ -74,12 +74,13 @@ public final class @(type_name) implements MessageDefinition {
 
 @[for constant in message.constants]@
   public static final @(get_java_type(constant.type)) @(constant.name) = @(primitive_value_to_java(constant.type, constant.value));
+
 @[end for]@
-
 @[for member in message.structure.members]@
-
 @[  if isinstance(member.type, AbstractNestedType)]@
+  // AbstractNestedType
 @[    if member.has_annotation('default')]@
+  // Has default annotation
 @[      if isinstance(member.type.value_type, BasicType)]@
   // Optimized array implementation for basic type
   private @(get_java_type(member.type, use_primitives=True))[] @(member.name) = @(value_to_java(member.type, member.get_annotation_value('default')['value']));
@@ -89,7 +90,9 @@ public final class @(type_name) implements MessageDefinition {
 @[      end if]@
 @# ! has_annotation('default')
 @[    else]@
+  // Does not have default annotation
 @[      if isinstance(member.type, Array)]@
+  // Array Type
 @[        if isinstance(member.type.value_type, BasicType)]@
   // Optimized array implementation for basic type
   private @(get_java_type(member.type, use_primitives=True))[] @(member.name) = new @(get_java_type(member.type, use_primitives=True))[@(member.type.size)];
@@ -99,6 +102,7 @@ public final class @(type_name) implements MessageDefinition {
 @[        end if]@
 @# !isinstance(member.type, Array)
 @[      else]@
+  // !Array Type, !AbstractNestedType
 @[        if isinstance(member.type.value_type, BasicType)]@
   // Optimized array implementation for basic type
   private @(get_java_type(member.type, use_primitives=True))[] @(member.name) = {};

@@ -36,10 +36,10 @@
 
 #define TAG "PublisherImpl"
 
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,    TAG, __VA_ARGS__)
-#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,     TAG, __VA_ARGS__)
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,     TAG, __VA_ARGS__)
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,    TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN, TAG, __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 #else
 
@@ -80,7 +80,7 @@ Java_org_ros2_rcljava_publisher_PublisherImpl_nativePublish(
   if (diff.count() * 1000.0 > 10.0) {
     LOGW("convert_from_java() time = %f ms", diff.count() * 1000.0);
   }
-  
+
   start = std::chrono::high_resolution_clock::now();
   rcl_ret_t ret = rcl_publish(publisher, raw_ros_message, nullptr);
   end = std::chrono::high_resolution_clock::now();

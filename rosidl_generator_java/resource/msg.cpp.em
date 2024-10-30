@@ -240,6 +240,10 @@ normalized_type = get_normalized_type(member.type)
   // Original unoptimized
   auto _jfield_@(member.name)_fid = env->GetFieldID(_j@(msg_normalized_type)_class_global, "@(member.name)", "L@(list_jni_type);");
 @[    end if]@
+  if (_jfield_@(member.name)_fid == nullptr) {
+    rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to resolve fieldID for @(member.name) in @(msg_normalized_type)");
+  }
+
   jobject _jlist_@(member.name)_object = env->GetObjectField(_jmessage_obj, _jfield_@(member.name)_fid);
 
   if (_jlist_@(member.name)_object != nullptr) {
@@ -328,9 +332,17 @@ normalized_type = get_normalized_type(member.type)
     }
 @# End of optimization for arrays of basic-types
 @[  end if]@
-  } else {
-    rcljava_throw_exception(env, "java/lang/IllegalStateException", "unable to get @(member.name) object field");
+@# This exception must be raised _VERY_ carefully.
+@# BaseExecutor::nativeTake() will call convert_from_java() on a brand-new, just-constructed
+@# instance of a Java message class. This means that some objects might still be NULL if they
+@# don't have a default
+@# If this is an Array of non-Basic types, without a 'default' annotation, then it isn't 
+@# initialized to a non-NULL value by the constructor. So a 'null' object is expected
   }
+  // TODO(salldritt): re-enable this throw for appropriate types
+  // else {
+  //   rcljava_throw_exception(env, "java/lang/IllegalStateException", rcljava_common::exceptions::rcljava_string_format("unable to get @(member.name) object field: %p", _jfield_@(member.name)_fid));
+  // }
 @[  else]@
   // !AbstractNestedType
 @[    if isinstance(member.type, AbstractGenericString)]@

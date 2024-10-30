@@ -15,6 +15,7 @@
 
 package org.ros2.rcljava.node;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -61,6 +62,9 @@ public class NodeTest {
   private Node node;
   private rcljava.msg.Primitives primitives1;
   private rcljava.msg.Primitives primitives2;
+
+  private double maxDeltaD = 1e-9;
+  private float maxDeltaF = 1e-5f;
 
   private boolean boolValue1, boolValue2;
   private byte byteValue1, byteValue2;
@@ -340,19 +344,19 @@ public class NodeTest {
 
     rcljava.msg.BoundedArrayPrimitives value = future.get();
 
-    assertEquals(boolValues, value.getBoolValues());
-    assertEquals(byteValues, value.getByteValues());
-    assertEquals(charValues, value.getCharValues());
-    assertEquals(float32Values, value.getFloat32Values());
-    assertEquals(float64Values, value.getFloat64Values());
-    assertEquals(int8Values, value.getInt8Values());
-    assertEquals(uint8Values, value.getUint8Values());
-    assertEquals(int16Values, value.getInt16Values());
-    assertEquals(uint16Values, value.getUint16Values());
-    assertEquals(int32Values, value.getInt32Values());
-    assertEquals(uint32Values, value.getUint32Values());
-    assertEquals(int64Values, value.getInt64Values());
-    assertEquals(uint64Values, value.getUint64Values());
+    assertArrayEquals(boolValues, value.getBoolValues());
+    assertArrayEquals(byteValues, value.getByteValues());
+    assertArrayEquals(charValues, value.getCharValues());
+    assertArrayEquals(float32Values, value.getFloat32Values(), maxDeltaF);
+    assertArrayEquals(float64Values, value.getFloat64Values(), maxDeltaD);
+    assertArrayEquals(int8Values, value.getInt8Values());
+    assertArrayEquals(uint8Values, value.getUint8Values());
+    assertArrayEquals(int16Values, value.getInt16Values());
+    assertArrayEquals(uint16Values, value.getUint16Values());
+    assertArrayEquals(int32Values, value.getInt32Values());
+    assertArrayEquals(uint32Values, value.getUint32Values());
+    assertArrayEquals(int64Values, value.getInt64Values());
+    assertArrayEquals(uint64Values, value.getUint64Values());
     assertEquals(stringValues, value.getStringValues());
 
     publisher.dispose();
@@ -502,19 +506,19 @@ public class NodeTest {
 
     rcljava.msg.DynamicArrayPrimitives value = future.get();
 
-    assertEquals(boolValues, value.getBoolValues());
-    assertEquals(byteValues, value.getByteValues());
-    assertEquals(charValues, value.getCharValues());
-    assertEquals(float32Values, value.getFloat32Values());
-    assertEquals(float64Values, value.getFloat64Values());
-    assertEquals(int8Values, value.getInt8Values());
-    assertEquals(uint8Values, value.getUint8Values());
-    assertEquals(int16Values, value.getInt16Values());
-    assertEquals(uint16Values, value.getUint16Values());
-    assertEquals(int32Values, value.getInt32Values());
-    assertEquals(uint32Values, value.getUint32Values());
-    assertEquals(int64Values, value.getInt64Values());
-    assertEquals(uint64Values, value.getUint64Values());
+    assertArrayEquals(boolValues, value.getBoolValues());
+    assertArrayEquals(byteValues, value.getByteValues());
+    assertArrayEquals(charValues, value.getCharValues());
+    assertArrayEquals(float32Values, value.getFloat32Values(), maxDeltaF);
+    assertArrayEquals(float64Values, value.getFloat64Values(), maxDeltaD);
+    assertArrayEquals(int8Values, value.getInt8Values());
+    assertArrayEquals(uint8Values, value.getUint8Values());
+    assertArrayEquals(int16Values, value.getInt16Values());
+    assertArrayEquals(uint16Values, value.getUint16Values());
+    assertArrayEquals(int32Values, value.getInt32Values());
+    assertArrayEquals(uint32Values, value.getUint32Values());
+    assertArrayEquals(int64Values, value.getInt64Values());
+    assertArrayEquals(uint64Values, value.getUint64Values());
     assertEquals(stringValues, value.getStringValues());
 
     publisher.dispose();
@@ -769,19 +773,19 @@ public class NodeTest {
 
     rcljava.msg.StaticArrayPrimitives value = future.get();
 
-    assertEquals(boolValues, value.getBoolValues());
-    assertEquals(byteValues, value.getByteValues());
-    assertEquals(charValues, value.getCharValues());
-    assertEquals(float32Values, value.getFloat32Values());
-    assertEquals(float64Values, value.getFloat64Values());
-    assertEquals(int8Values, value.getInt8Values());
-    assertEquals(uint8Values, value.getUint8Values());
-    assertEquals(int16Values, value.getInt16Values());
-    assertEquals(uint16Values, value.getUint16Values());
-    assertEquals(int32Values, value.getInt32Values());
-    assertEquals(uint32Values, value.getUint32Values());
-    assertEquals(int64Values, value.getInt64Values());
-    assertEquals(uint64Values, value.getUint64Values());
+    assertArrayEquals(boolValues, value.getBoolValues());
+    assertArrayEquals(byteValues, value.getByteValues());
+    assertArrayEquals(charValues, value.getCharValues());
+    assertArrayEquals(float32Values, value.getFloat32Values(), maxDeltaF);
+    assertArrayEquals(float64Values, value.getFloat64Values(), maxDeltaD);
+    assertArrayEquals(int8Values, value.getInt8Values());
+    assertArrayEquals(uint8Values, value.getUint8Values());
+    assertArrayEquals(int16Values, value.getInt16Values());
+    assertArrayEquals(uint16Values, value.getUint16Values());
+    assertArrayEquals(int32Values, value.getInt32Values());
+    assertArrayEquals(uint32Values, value.getUint32Values());
+    assertArrayEquals(int64Values, value.getInt64Values());
+    assertArrayEquals(uint64Values, value.getUint64Values());
     assertEquals(stringValues, value.getStringValues());
 
     publisher.dispose();
