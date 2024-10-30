@@ -104,10 +104,6 @@ repositories:
     type: git
     url: https://github.com/ros2/rcl_interfaces.git
     version: jazzy
-  ros2/spdlog_vendor:
-    type: git
-    url: https://github.com/ros2/spdlog_vendor.git
-    version: jazzy
   ros2/rcl_logging:
     type: git
     url: https://github.com/ros2/rcl_logging.git
@@ -120,22 +116,7 @@ repositories:
     type: git
     url: https://github.com/skalldri/rcutils.git
     version: jazzy
-  ros2/rmw:
-    type: git
-    url: https://github.com/ros2/rmw.git
-    version: jazzy
-  ros2/rmw_dds_common:
-    type: git
-    url: https://github.com/ros2/rmw_dds_common.git
-    version: jazzy
-  ros2/rmw_fastrtps:
-    type: git
-    url: https://github.com/ros2/rmw_fastrtps.git
-    version: jazzy
-  ros2/rmw_implementation:
-    type: git
-    url: https://github.com/ros2/rmw_implementation.git
-    version: jazzy
+  
   ros2/rosidl:
     type: git
     url: https://github.com/ros2/rosidl.git
@@ -172,9 +153,29 @@ repositories:
     type: git
     url: https://github.com/ros2/rosidl_typesupport_fastrtps.git
     version: jazzy
+  ros2/rmw:
+    type: git
+    url: https://github.com/ros2/rmw.git
+    version: jazzy
+  ros2/rmw_dds_common:
+    type: git
+    url: https://github.com/ros2/rmw_dds_common.git
+    version: jazzy
+  ros2/rmw_fastrtps:
+    type: git
+    url: https://github.com/ros2/rmw_fastrtps.git
+    version: jazzy
+  ros2/rmw_implementation:
+    type: git
+    url: https://github.com/ros2/rmw_implementation.git
+    version: jazzy
   ros2/rpyutils:
     type: git
     url: https://github.com/ros2/rpyutils.git
+    version: jazzy
+  ros2/spdlog_vendor:
+    type: git
+    url: https://github.com/ros2/spdlog_vendor.git
     version: jazzy
   ros2/test_interface_files:
     type: git
