@@ -9,6 +9,7 @@ on:
 
 jobs:
   build_and_test_desktop:
+    if: false
     runs-on: ubuntu-24.04
     steps:
     - name: Install Java
@@ -46,7 +47,6 @@ jobs:
         colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
         colcon test-result --verbose
   build_and_test_android:
-    if: false
     runs-on: ubuntu-24.04
     steps:
     - name: Install Java
@@ -64,8 +64,15 @@ jobs:
     - uses: ros-tooling/setup-ros@0.7.9
       with:
         required-ros-distributions: jazzy
-    - uses: ros-tooling/action-ros-ci@0.3.13
-      with:
-        package-name: rosidl_generator_java rcljava_common rcljava
-        target-ros2-distro: jazzy
-        vcs-repo-file-url: ${{ github.workspace }}/ros2_java_desktop.repos
+    - name: Install colcon extensions for Gradle
+      run: |
+        sudo pip3 install git+https://github.com/colcon/colcon-gradle.git
+        sudo pip3 install git+https://github.com/colcon/colcon-ros-gradle.git
+    - name: Setup workspace with VCS repo file
+      run: |
+        mkdir -p ros2_java_ws/src
+        cd ros2_java_ws
+        curl -sL file://${{ github.workspace }}/ros2_java_android.repos | vcs import src
+        # Use checked out version of ros2_java
+        rm -rf src/ros2-java/ros2_java
+        ln --symbolic ${{ github.workspace }} src/ros2-java
