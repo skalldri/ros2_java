@@ -76,3 +76,7 @@ jobs:
         # Use checked out version of ros2_java
         rm -rf src/ros2-java/ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java
+    - name: Run Colcon Build
+      run: |
+        cd ros2_java_ws
+        colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to android_ndk
