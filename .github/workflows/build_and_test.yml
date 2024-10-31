@@ -76,7 +76,41 @@ jobs:
         # Use checked out version of ros2_java
         rm -rf src/ros2-java/ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java
-    - name: Run Colcon Build
+    - name: Install Android NDK
       run: |
         cd ros2_java_ws
         colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to android_ndk
+    - name: Install Android NDK
+      run: |
+        cd ros2_java_ws
+
+        export ANDROID_ABI=x86_64
+        export ANDROID_NATIVE_API_LEVEL=android-22
+        export ANDROID_STL=c++_shared
+        export ANDROID_HOME=${PWD}/install/android_ndk/android-sdk
+        export ANDROID_NDK=${ANDROID_HOME}/ndk/26.3.11579264
+
+        colcon build \
+          --metas src/ros2-java/ros2_java/colcon.android.meta \
+          --symlink-install \
+          --event-handlers console_cohesion+ \
+          --packages-up-to rclandroid \
+          --packages-ignore uncrustify_vendor \
+          --gradle-args \
+          --debug --info -Pament.android_stl=${ANDROID_STL} -Pament.android_abi=${ANDROID_ABI} -Pament.android_ndk=${ANDROID_NDK} -Pament.android_variant=release \
+          --cmake-args \
+          -C "${PWD}/TryRunResults-Loomo-Android5.1.1.cmake" \
+          -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
+          -DANDROID_FUNCTION_LEVEL_LINKING=OFF \
+          -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL} \
+          -DANDROID_ABI=${ANDROID_ABI} \
+          -DANDROID_NDK=${ANDROID_NDK} \
+          -DANDROID_STL=${ANDROID_STL} \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_FIND_ROOT_PATH="${PWD}/install" \
+          -DFORCE_BUILD_VENDOR_PKG=1 \
+          -DTHIRDPARTY=ON \
+          -DTHIRDPARTY=FORCE \
+          -DTHIRDPARTY_UPDATE=1 \
+          -DROSIDL_CMAKE_CONFIG_EXTRAS=1
+    

@@ -1,0 +1,61 @@
+{
+    "names": {
+        "ament_cmake_vendor_package": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "foonathan_memory_vendor": {
+            "cmake-args": [ "-DFOONATHAN_MEMORY_FORCE_VENDORED_BUILD=ON" ]
+        },
+        "Fast-DDS": {
+            "cmake-args": [ "-DCOMPILE_EXAMPLES=OFF" ]
+        },
+        "libyaml_vendor": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rcl": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rcl_logging_spdlog": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rcl_yaml_param_parser": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rclcpp": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rclcpp_action": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rclcpp_lifecycle": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rcutils": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rmw_dds_common": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rmw_implementation": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rosidl_typesupport_c": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rosidl_typesupport_cpp": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rosidl_typesupport_fastrtps_cpp": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rosidl_typesupport_fastrtps_c": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rosidl_runtime_c": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+        "rosidl_runtime_cpp": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
+    }
+}
