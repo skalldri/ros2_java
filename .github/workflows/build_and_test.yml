@@ -80,7 +80,7 @@ jobs:
       run: |
         cd ros2_java_ws
         colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to android_ndk
-    - name: Install Android NDK
+    - name: Run Colcon Build
       run: |
         cd ros2_java_ws
 
@@ -99,7 +99,6 @@ jobs:
           --gradle-args \
           --debug --info -Pament.android_stl=${ANDROID_STL} -Pament.android_abi=${ANDROID_ABI} -Pament.android_ndk=${ANDROID_NDK} -Pament.android_variant=release \
           --cmake-args \
-          -C "${PWD}/TryRunResults-Loomo-Android5.1.1.cmake" \
           -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
           -DANDROID_FUNCTION_LEVEL_LINKING=OFF \
           -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL} \
