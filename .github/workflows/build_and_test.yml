@@ -117,4 +117,8 @@ jobs:
           -DPython3_EXECUTABLE=${PYTHON3_EXEC} \
           -DPython3_LIBRARY=${PYTHON3_LIBRARY} \
           -DPython3_INCLUDE_DIR=${PYTHON3_INCLUDE_DIR}
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ros-jazzy-aar-release
+        path: ros2_java_ws/install/rclandroid/share/rclandroid/android/rclandroid-release.aar
     
