@@ -87,6 +87,10 @@ jobs:
       run: |
         cd ros2_java_ws
 
+        export PYTHON3_EXEC="$( which python3 )"
+        export PYTHON3_LIBRARY="$( ${PYTHON3_EXEC} -c 'import os.path; from distutils import sysconfig; print(os.path.realpath(os.path.join(sysconfig.get_config_var("LIBPL"), sysconfig.get_config_var("LDLIBRARY"))))' )"
+        export PYTHON3_INCLUDE_DIR="$( ${PYTHON3_EXEC} -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEPY"))' )"
+
         export ANDROID_ABI=x86_64
         export ANDROID_NATIVE_API_LEVEL=android-22
         export ANDROID_STL=c++_shared
@@ -98,7 +102,7 @@ jobs:
           --symlink-install \
           --event-handlers console_cohesion+ \
           --packages-up-to rclandroid \
-          --packages-ignore uncrustify_vendor \
+          --packages-ignore uncrustify_vendor rosidl_generator_py \
           --gradle-args \
           --debug --info -Pament.android_stl=${ANDROID_STL} -Pament.android_abi=${ANDROID_ABI} -Pament.android_ndk=${ANDROID_NDK} -Pament.android_variant=release \
           --cmake-args \
@@ -110,9 +114,7 @@ jobs:
           -DANDROID_STL=${ANDROID_STL} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_FIND_ROOT_PATH="${PWD}/install" \
-          -DFORCE_BUILD_VENDOR_PKG=1 \
-          -DTHIRDPARTY=ON \
-          -DTHIRDPARTY=FORCE \
-          -DTHIRDPARTY_UPDATE=1 \
-          -DROSIDL_CMAKE_CONFIG_EXTRAS=1
+          -DPython3_EXECUTABLE=${PYTHON3_EXEC} \
+          -DPython3_LIBRARY=${PYTHON3_LIBRARY} \
+          -DPython3_INCLUDE_DIR=${PYTHON3_INCLUDE_DIR}
     

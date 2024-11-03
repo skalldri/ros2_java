@@ -3,11 +3,11 @@
         "ament_cmake_vendor_package": {
             "cmake-args": [ "-DBUILD_TESTING=OFF" ]
         },
+        "fastrtps": {
+            "cmake-args": [ "-DCOMPILE_EXAMPLES=OFF", "-DTHIRDPARTY=FORCE", "-DTHIRDPARTY_UPDATE=ON" ]
+        },
         "foonathan_memory_vendor": {
             "cmake-args": [ "-DFOONATHAN_MEMORY_FORCE_VENDORED_BUILD=ON" ]
-        },
-        "Fast-DDS": {
-            "cmake-args": [ "-DCOMPILE_EXAMPLES=OFF" ]
         },
         "libyaml_vendor": {
             "cmake-args": [ "-DBUILD_TESTING=OFF", "-DFORCE_BUILD_VENDOR_PKG=ON" ]
