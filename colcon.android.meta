@@ -10,7 +10,7 @@
             "cmake-args": [ "-DCOMPILE_EXAMPLES=OFF" ]
         },
         "libyaml_vendor": {
-            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+            "cmake-args": [ "-DBUILD_TESTING=OFF", "-DFORCE_BUILD_VENDOR_PKG=ON" ]
         },
         "rcl": {
             "cmake-args": [ "-DBUILD_TESTING=OFF" ]

@@ -68,6 +68,9 @@ jobs:
       run: |
         sudo pip3 install git+https://github.com/colcon/colcon-gradle.git
         sudo pip3 install git+https://github.com/colcon/colcon-ros-gradle.git
+    - name: Install Python3 dev
+      run: |
+        sudo apt-get install -y python3-dev
     - name: Setup workspace with VCS repo file
       run: |
         mkdir -p ros2_java_ws/src
