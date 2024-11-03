@@ -81,7 +81,7 @@ jobs:
     - name: Install Android NDK
       run: |
         cd ros2_java_ws
-        colcon build --event-handlers=console_direct+ --packages-up-to android_ndk
+        colcon build --symlink-install --event-handlers=console_direct+ --packages-up-to android_ndk
     - name: Run Colcon Build
       run: |
         cd ros2_java_ws
