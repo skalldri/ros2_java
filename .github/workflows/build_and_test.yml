@@ -95,6 +95,7 @@ jobs:
         export ANDROID_NATIVE_API_LEVEL=android-22
         export ANDROID_STL=c++_shared
         export ANDROID_HOME=${PWD}/install/android_ndk/android-sdk
+        export ANDROID_SDK_ROOT=${ANDROID_HOME}
         export ANDROID_NDK=${ANDROID_HOME}/ndk/26.3.11579264
 
         colcon build \
