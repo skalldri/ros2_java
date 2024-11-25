@@ -45,7 +45,7 @@ jobs:
         source install/setup.bash
         colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
         colcon test-result --verbose
-  build_and_test_android:
+  build_android:
     runs-on: ubuntu-24.04
     steps:
     - name: Install Java

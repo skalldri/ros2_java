@@ -39,6 +39,9 @@
         "rmw_fastrtps_cpp": {
             "cmake-args": [ "-DBUILD_TESTING=OFF" ]
         },
+        "rmw_fastrtps_dynamic_cpp": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
         "rmw_implementation": {
             "cmake-args": [ "-DBUILD_TESTING=OFF" ]
         },
