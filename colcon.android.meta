@@ -36,6 +36,9 @@
         "rmw_dds_common": {
             "cmake-args": [ "-DBUILD_TESTING=OFF" ]
         },
+        "rmw_fastrtps_cpp": {
+            "cmake-args": [ "-DBUILD_TESTING=OFF" ]
+        },
         "rmw_implementation": {
             "cmake-args": [ "-DBUILD_TESTING=OFF" ]
         },
