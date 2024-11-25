@@ -70,6 +70,7 @@ set(${PROJECT_NAME}_jni_sources
   "src/main/cpp/org_ros2_rcljava_events_EventHandlerImpl.cpp"
   "src/main/cpp/org_ros2_rcljava_graph_EndpointInfo"
   "src/main/cpp/org_ros2_rcljava_publisher_statuses_LivelinessLost.cpp"
+  "src/main/cpp/org_ros2_rcljava_publisher_statuses_Matched.cpp"
   "src/main/cpp/org_ros2_rcljava_publisher_statuses_OfferedDeadlineMissed.cpp"
   "src/main/cpp/org_ros2_rcljava_publisher_statuses_OfferedQosIncompatible.cpp"
   "src/main/cpp/org_ros2_rcljava_node_NodeImpl.cpp"
@@ -127,8 +128,6 @@ foreach(_jni_source ${${PROJECT_NAME}_jni_sources})
     # On Android, link against the android logging library
     find_library(log-lib log)
     target_link_libraries(${_target_name} ${log-lib})
-  else()
-    message(WARNING "Not compiling for Android!")
   endif()
 
   ament_export_jni_libraries(${_target_name})
@@ -188,6 +187,7 @@ set(${PROJECT_NAME}_sources
   "src/main/java/org/ros2/rcljava/publisher/Publisher.java"
   "src/main/java/org/ros2/rcljava/publisher/PublisherImpl.java"
   "src/main/java/org/ros2/rcljava/publisher/statuses/LivelinessLost.java"
+  "src/main/java/org/ros2/rcljava/publisher/statuses/Matched.java"
   "src/main/java/org/ros2/rcljava/publisher/statuses/OfferedDeadlineMissed.java"
   "src/main/java/org/ros2/rcljava/publisher/statuses/OfferedQosIncompatible.java"
   "src/main/java/org/ros2/rcljava/qos/policies/Durability.java"

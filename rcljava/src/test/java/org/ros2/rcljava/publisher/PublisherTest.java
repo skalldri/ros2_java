@@ -18,21 +18,41 @@ package org.ros2.rcljava.publisher;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.ros2.rcljava.RCLJava;
+import org.ros2.rcljava.concurrent.RCLFuture;
 import org.ros2.rcljava.consumers.Consumer;
 import org.ros2.rcljava.events.EventHandler;
 import org.ros2.rcljava.publisher.statuses.LivelinessLost;
+import org.ros2.rcljava.publisher.statuses.Matched;
 import org.ros2.rcljava.publisher.statuses.OfferedDeadlineMissed;
 import org.ros2.rcljava.publisher.statuses.OfferedQosIncompatible;
 import org.ros2.rcljava.exceptions.RCLException;
 import org.ros2.rcljava.node.Node;
+import org.ros2.rcljava.subscription.Subscription;
 
 public class PublisherTest {
+  public class TestConsumer<T> implements Consumer<T> {
+    private final RCLFuture<T> future;
+
+    TestConsumer(final RCLFuture<T> future) {
+      this.future = future;
+    }
+
+    public final void accept(final T msg) {
+      if (!this.future.isDone()) {
+        this.future.set(msg);
+      }
+    }
+  }
+
   @BeforeClass
   public static void setupOnce() throws Exception {
     // Just to quiet down warnings
@@ -138,6 +158,49 @@ public class PublisherTest {
     assertNotEquals(0, eventHandler.getHandle());
     // force executing the callback, so we check that taking an event works
     eventHandler.executeCallback();
+    RCLJava.shutdown();
+    assertEquals(0, eventHandler.getHandle());
+  }
+
+  @Test
+  public final void testCreateMatchedEvent() {
+    RCLJava.rclJavaInit();
+    Node node = RCLJava.createNode("test_node");
+    Publisher<std_msgs.msg.String> publisher =
+        node.<std_msgs.msg.String>createPublisher(std_msgs.msg.String.class, "test_topic");
+
+    final CompletableFuture<String> matchedFuture = new CompletableFuture<String>();
+
+    EventHandler eventHandler = publisher.createEventHandler(
+      Matched.factory, new Consumer<Matched>() {
+        public void accept(final Matched status) {
+          assertEquals(status.totalCount, 1);
+          assertEquals(status.totalCountChange, 1);
+          assertEquals(status.currentCount, 1);
+          assertEquals(status.currentCountChange, 1);
+          matchedFuture.complete("DONE");
+        }
+      }
+    );
+    assertNotEquals(0, eventHandler.getHandle());
+
+    RCLFuture<std_msgs.msg.String> future =
+        new RCLFuture<std_msgs.msg.String>(new WeakReference<Node>(node));
+
+    // Add a subscriber, which will execute the event:
+    Subscription<std_msgs.msg.String> subscriber =
+        node.<std_msgs.msg.String>createSubscription(std_msgs.msg.String.class, 
+          "test_topic", 
+          new TestConsumer<std_msgs.msg.String>(future));
+
+    std_msgs.msg.String msg = new std_msgs.msg.String();
+    msg.setData("Hello");
+
+    while (RCLJava.ok() && !matchedFuture.isDone()) {
+      publisher.publish(msg);
+      RCLJava.spinOnce(node);
+    }
+
     RCLJava.shutdown();
     assertEquals(0, eventHandler.getHandle());
   }
