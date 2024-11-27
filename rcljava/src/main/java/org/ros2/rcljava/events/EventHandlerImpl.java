@@ -16,7 +16,7 @@ package org.ros2.rcljava.events;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.Supplier;
+import org.ros2.rcljava.utils.Supplier;
 
 import org.ros2.rcljava.common.JNIUtils;
 import org.ros2.rcljava.consumers.Consumer;

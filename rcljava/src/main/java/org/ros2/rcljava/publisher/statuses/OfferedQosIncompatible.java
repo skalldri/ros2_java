@@ -14,7 +14,7 @@
 
 package org.ros2.rcljava.publisher.statuses;
 
-import java.util.function.Supplier;
+import org.ros2.rcljava.utils.Supplier;
 
 import org.ros2.rcljava.common.JNIUtils;
 import org.ros2.rcljava.detail.QosIncompatibleStatus;

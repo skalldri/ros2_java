@@ -18,7 +18,7 @@ package org.ros2.rcljava.publisher;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Supplier;
+import org.ros2.rcljava.utils.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

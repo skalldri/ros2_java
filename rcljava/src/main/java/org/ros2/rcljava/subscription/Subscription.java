@@ -17,7 +17,7 @@ package org.ros2.rcljava.subscription;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
-import java.util.function.Supplier;
+import org.ros2.rcljava.utils.Supplier;
 
 import org.ros2.rcljava.consumers.Consumer;
 import org.ros2.rcljava.events.EventHandler;

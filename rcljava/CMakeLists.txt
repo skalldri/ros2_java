@@ -142,6 +142,7 @@ endforeach()
 set(${PROJECT_NAME}_sources
   "src/main/java/org/ros2/rcljava/RCLJava.java"
   "src/main/java/org/ros2/rcljava/Time.java"
+  "src/main/java/org/ros2/rcljava/utils/Supplier.java"
   "src/main/java/org/ros2/rcljava/client/Client.java"
   "src/main/java/org/ros2/rcljava/client/ClientImpl.java"
   "src/main/java/org/ros2/rcljava/concurrent/Callback.java"
