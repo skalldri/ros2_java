@@ -4,7 +4,13 @@
             "cmake-args": [ "-DBUILD_TESTING=OFF" ]
         },
         "fastrtps": {
-            "cmake-args": [ "-DCOMPILE_EXAMPLES=OFF", "-DTHIRDPARTY=FORCE", "-DTHIRDPARTY_UPDATE=ON" ]
+            "cmake-args": [ 
+                "-DCOMPILE_EXAMPLES=OFF",
+                "-DTHIRDPARTY_TinyXML2=FORCE",
+                "-DTHIRDPARTY_Asio=FORCE",
+                "-DTHIRDPARTY_android-ifaddrs=FORCE",
+                "-DTHIRDPARTY_UPDATE=ON"
+            ]
         },
         "foonathan_memory_vendor": {
             "cmake-args": [ "-DFOONATHAN_MEMORY_FORCE_VENDORED_BUILD=ON" ]

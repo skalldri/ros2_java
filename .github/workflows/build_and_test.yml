@@ -15,10 +15,10 @@ jobs:
       run: |
         sudo apt-get update -qq
         sudo apt-get install -y openjdk-21-jre
-    - name: Install libbenchmark-dev
+    - name: Install dependencies
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -y libbenchmark-dev
+        sudo apt-get install -y libasio-dev libbenchmark-dev
     - uses: ros-tooling/setup-ros@0.7.9
       with:
         required-ros-distributions: jazzy
@@ -31,10 +31,6 @@ jobs:
         # Use checked out version of ros2_java
         rm -rf src/ros2-java/ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java
-    - name: Install dependencies
-      run: |
-        echo "No known dependencies yet!"
-        sudo apt-get install libasio-dev libbenchmark-dev
     - name: Run Colcon Build
       run: |
         cd ros2_java_ws
