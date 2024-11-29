@@ -93,6 +93,7 @@ repositories:
   ros2/rosidl:
     type: git
     url: https://github.com/ros2/rosidl.git
+    version: jazzy
   ros2/rosidl_core:
     type: git
     url: https://github.com/ros2/rosidl_core.git
@@ -141,4 +142,4 @@ repositories:
   ros2-java/ros2_java:
     type: git
     url: https://github.com/skalldri/ros2_java.git
-    version: jazzy
+    version: jazzy-zenoh
