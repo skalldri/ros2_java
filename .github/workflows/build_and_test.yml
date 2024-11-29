@@ -8,7 +8,7 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  build_and_test_desktop:
+  build_and_test_fastdds_desktop:
     runs-on: ubuntu-24.04
     steps:
     - name: Install Java
@@ -27,7 +27,7 @@ jobs:
       run: |
         mkdir -p ros2_java_ws/src
         cd ros2_java_ws
-        curl -sL file://${{ github.workspace }}/ros2_java_desktop.repos | vcs import src
+        curl -sL file://${{ github.workspace }}/ros2_java_desktop_fastdds.repos | vcs import src
         # Use checked out version of ros2_java
         rm -rf src/ros2-java/ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java
@@ -41,7 +41,7 @@ jobs:
         source install/setup.bash
         colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
         colcon test-result --verbose
-  build_android:
+  build_fastdds_android:
     runs-on: ubuntu-24.04
     steps:
     - name: Install Java
@@ -70,7 +70,7 @@ jobs:
       run: |
         mkdir -p ros2_java_ws/src
         cd ros2_java_ws
-        curl -sL file://${{ github.workspace }}/ros2_java_android.repos | vcs import src
+        curl -sL file://${{ github.workspace }}/ros2_java_android_fastdds.repos | vcs import src
         # Use checked out version of ros2_java
         rm -rf src/ros2-java/ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java
