@@ -167,7 +167,7 @@ repositories:
     version: jazzy
   ros2/rmw_implementation:
     type: git
-    url: https://github.com/ros2/rmw_implementation.git
+    url: https://github.com/skalldri/rmw_implementation.git
     version: jazzy
   ros2/rpyutils:
     type: git
