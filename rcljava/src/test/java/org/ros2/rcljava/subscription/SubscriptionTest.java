@@ -75,6 +75,12 @@ public class SubscriptionTest {
   @Test
   public final void testCreateLivelinessChangedEvent() {
     String identifier = RCLJava.getRMWIdentifier();
+
+    if (identifier.equals("rmw_zenoh_cpp")) {
+      // LivelinessChanged events are not supported in Zenoh yet.
+      return;
+    }
+
     RCLJava.rclJavaInit();
     Node node = RCLJava.createNode("test_node");
     Subscription<std_msgs.msg.String> subscription = node.<std_msgs.msg.String>createSubscription(
@@ -101,6 +107,12 @@ public class SubscriptionTest {
   @Test
   public final void testCreateRequestedDeadlineMissedEvent() {
     String identifier = RCLJava.getRMWIdentifier();
+
+    if (identifier.equals("rmw_zenoh_cpp")) {
+      // RequestedDeadlineMissed events are not supported in Zenoh yet.
+      return;
+    }
+
     RCLJava.rclJavaInit();
     Node node = RCLJava.createNode("test_node");
     Subscription<std_msgs.msg.String> subscription = node.<std_msgs.msg.String>createSubscription(
@@ -125,7 +137,7 @@ public class SubscriptionTest {
   @Test
   public final void testCreateRequestedQosIncompatibleEvent() {
     String identifier = RCLJava.getRMWIdentifier();
-    if (identifier.equals("rmw_fastrtps_cpp") || identifier.equals("rmw_fastrtps_dynamic_cpp")) {
+    if (identifier.equals("rmw_fastrtps_cpp") || identifier.equals("rmw_fastrtps_dynamic_cpp") || identifier.equals("rmw_zenoh_cpp")) {
       // event not supported in these implementations
       return;
     }
@@ -154,7 +166,7 @@ public class SubscriptionTest {
   @Test
   public final void testCreateMessageLost() {
     String identifier = RCLJava.getRMWIdentifier();
-    if (identifier.equals("rmw_fastrtps_cpp") || identifier.equals("rmw_fastrtps_dynamic_cpp")) {
+    if (identifier.equals("rmw_fastrtps_cpp") || identifier.equals("rmw_fastrtps_dynamic_cpp") || identifier.equals("rmw_zenoh_cpp")) {
       // event not supported in these implementations
       return;
     }

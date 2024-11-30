@@ -41,6 +41,39 @@ jobs:
         source install/setup.bash
         colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
         colcon test-result --verbose
+  build_and_test_zenoh_desktop:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Install Java
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y openjdk-21-jre
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y libasio-dev libbenchmark-dev
+    - uses: ros-tooling/setup-ros@0.7.9
+      with:
+        required-ros-distributions: jazzy
+    - uses: actions/checkout@v4.2.1
+    - name: Setup workspace with VCS repo file
+      run: |
+        mkdir -p ros2_java_ws/src
+        cd ros2_java_ws
+        curl -sL file://${{ github.workspace }}/ros2_java_desktop_zenoh.repos | vcs import src
+        # Use checked out version of ros2_java
+        rm -rf src/ros2-java/ros2_java
+        ln --symbolic ${{ github.workspace }} src/ros2-java
+    - name: Run Colcon Build
+      run: |
+        cd ros2_java_ws
+        colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
+    - name: Run Colcon Test
+      run: |
+        cd ros2_java_ws
+        source install/setup.bash
+        colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
+        colcon test-result --verbose
   build_fastdds_android:
     runs-on: ubuntu-24.04
     steps:

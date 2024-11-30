@@ -1092,20 +1092,31 @@ public class NodeTest {
     new Consumer<Collection<EndpointInfo>>() {
       public void accept(final Collection<EndpointInfo> info) {
         assertEquals(info.size(), 2);
-        Iterator<EndpointInfo> it = info.iterator();
-        EndpointInfo item = it.next();
-        assertEquals("test_node", item.nodeName);
-        assertEquals("/", item.nodeNamespace);
-        assertEquals("rcljava/msg/UInt32", item.topicType);
-        assertEquals(item.endpointType, EndpointInfo.EndpointType.PUBLISHER);
-        assertEquals(item.qos.getReliability(), Reliability.RELIABLE);
-        item = it.next();
-        assertEquals("test_node", item.nodeName);
-        assertEquals("/", item.nodeNamespace);
-        assertEquals("rcljava/msg/UInt32", item.topicType);
-        assertEquals(item.endpointType, EndpointInfo.EndpointType.PUBLISHER);
-        assertEquals(item.qos.getReliability(), Reliability.BEST_EFFORT);
-        assertFalse(it.hasNext());
+        boolean hasSeenReliable = false;
+        boolean hasSeenBestEffort = false;
+
+        for (EndpointInfo item : info) {
+          assertEquals("test_node", item.nodeName);
+          assertEquals("/", item.nodeNamespace);
+          assertEquals("rcljava/msg/UInt32", item.topicType);
+          assertEquals(EndpointInfo.EndpointType.PUBLISHER, item.endpointType);
+
+          // The order of returned publishers it not stable across RMW implementations, so the test
+          // must support receiving them in either order
+          assertTrue(Reliability.RELIABLE == item.qos.getReliability() || Reliability.BEST_EFFORT == item.qos.getReliability());
+
+          // We can only see each Reliability type once
+          if (Reliability.RELIABLE == item.qos.getReliability()) {
+            assertFalse(hasSeenReliable);
+            hasSeenReliable = true;
+          } else if (Reliability.BEST_EFFORT == item.qos.getReliability()) {
+            assertFalse(hasSeenBestEffort);
+            hasSeenBestEffort = true;
+          }
+        }
+
+        assertTrue(hasSeenReliable);
+        assertTrue(hasSeenBestEffort);
       }
     };
 
@@ -1149,20 +1160,31 @@ public class NodeTest {
     new Consumer<Collection<EndpointInfo>>() {
       public void accept(final Collection<EndpointInfo> info) {
         assertEquals(info.size(), 2);
-        Iterator<EndpointInfo> it = info.iterator();
-        EndpointInfo item = it.next();
-        assertEquals("test_node", item.nodeName);
-        assertEquals("/", item.nodeNamespace);
-        assertEquals("rcljava/msg/UInt32", item.topicType);
-        assertEquals(item.endpointType, EndpointInfo.EndpointType.SUBSCRIPTION);
-        assertEquals(item.qos.getReliability(), Reliability.RELIABLE);
-        item = it.next();
-        assertEquals("test_node", item.nodeName);
-        assertEquals("/", item.nodeNamespace);
-        assertEquals("rcljava/msg/UInt32", item.topicType);
-        assertEquals(item.endpointType, EndpointInfo.EndpointType.SUBSCRIPTION);
-        assertEquals(item.qos.getReliability(), Reliability.BEST_EFFORT);
-        assertFalse(it.hasNext());
+        boolean hasSeenReliable = false;
+        boolean hasSeenBestEffort = false;
+
+        for (EndpointInfo item : info) {
+          assertEquals("test_node", item.nodeName);
+          assertEquals("/", item.nodeNamespace);
+          assertEquals("rcljava/msg/UInt32", item.topicType);
+          assertEquals(EndpointInfo.EndpointType.SUBSCRIPTION, item.endpointType);
+
+          // The order of returned publishers it not stable across RMW implementations, so the test
+          // must support receiving them in either order
+          assertTrue(Reliability.RELIABLE == item.qos.getReliability() || Reliability.BEST_EFFORT == item.qos.getReliability());
+
+          // We can only see each Reliability type once
+          if (Reliability.RELIABLE == item.qos.getReliability()) {
+            assertFalse(hasSeenReliable);
+            hasSeenReliable = true;
+          } else if (Reliability.BEST_EFFORT == item.qos.getReliability()) {
+            assertFalse(hasSeenBestEffort);
+            hasSeenBestEffort = true;
+          }
+        }
+
+        assertTrue(hasSeenReliable);
+        assertTrue(hasSeenBestEffort);
       }
     };
 

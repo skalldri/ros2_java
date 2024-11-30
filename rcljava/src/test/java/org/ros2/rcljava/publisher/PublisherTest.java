@@ -93,6 +93,13 @@ public class PublisherTest {
   @Test
   public final void testCreateLivelinessLostEvent() {
     RCLJava.rclJavaInit();
+
+    String identifier = RCLJava.getRMWIdentifier();
+    if (identifier.equals("rmw_zenoh_cpp")) {
+      // LivelinessLost events are not supported in Zenoh yet.
+      return;
+    }
+
     Node node = RCLJava.createNode("test_node");
     Publisher<std_msgs.msg.String> publisher =
         node.<std_msgs.msg.String>createPublisher(std_msgs.msg.String.class, "test_topic");
@@ -114,7 +121,7 @@ public class PublisherTest {
   @Test
   public final void testCreateOfferedQosIncompatibleEvent() {
     String identifier = RCLJava.getRMWIdentifier();
-    if (identifier.equals("rmw_fastrtps_cpp") || identifier.equals("rmw_fastrtps_dynamic_cpp")) {
+    if (identifier.equals("rmw_fastrtps_cpp") || identifier.equals("rmw_fastrtps_dynamic_cpp") || identifier.equals("rmw_zenoh_cpp")) {
       // event not supported in these implementations
       return;
     }
@@ -144,6 +151,13 @@ public class PublisherTest {
   @Test
   public final void testCreateOfferedDeadlineMissedEvent() {
     RCLJava.rclJavaInit();
+
+    String identifier = RCLJava.getRMWIdentifier();
+    if (identifier.equals("rmw_zenoh_cpp")) {
+      // OfferedDeadlineMissed events are not supported in Zenoh yet.
+      return;
+    }
+
     Node node = RCLJava.createNode("test_node");
     Publisher<std_msgs.msg.String> publisher =
         node.<std_msgs.msg.String>createPublisher(std_msgs.msg.String.class, "test_topic");
