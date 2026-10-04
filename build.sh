@@ -34,6 +34,12 @@ PYTHON3_EXEC="$(command -v python3)"
 PYTHON3_LIBRARY="$("$PYTHON3_EXEC" -c 'import os, sysconfig; print(os.path.realpath(os.path.join(sysconfig.get_config_var("LIBPL"), sysconfig.get_config_var("LDLIBRARY"))))')"
 PYTHON3_INCLUDE_DIR="$("$PYTHON3_EXEC" -c 'import sysconfig; print(sysconfig.get_config_var("INCLUDEPY"))')"
 
+# colcon prefers its PowerShell shell extension when `pwsh` exists (GitHub runners have it). That
+# extension mangles the editable-install hook for python packages: PYTHONPATH ends up as
+# "<prefix>//abs/path/build/ament_package" and ament_cmake_core then cannot import ament_package.
+# Stay on the POSIX shell extensions.
+export COLCON_EXTENSION_BLOCKLIST="${COLCON_EXTENSION_BLOCKLIST:-colcon_core.shell.powershell}"
+
 cd "$WS"
 echo "Workspace: $WS"
 echo "NDK: $ANDROID_NDK  ABI: $ANDROID_ABI  API: $ANDROID_NATIVE_API_LEVEL  STL: $ANDROID_STL"
