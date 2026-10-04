@@ -29,6 +29,14 @@ export ANDROID_NATIVE_API_LEVEL="${ANDROID_NATIVE_API_LEVEL:-android-22}"
 export ANDROID_STL="${ANDROID_STL:-c++_shared}"
 [[ -f "$ANDROID_NDK/build/cmake/android.toolchain.cmake" ]] || { echo "NDK not found at $ANDROID_NDK" >&2; exit 1; }
 
+# rclandroid/build.gradle still uses jcenter(), which Gradle 9 removed; AGP 8.4 needs >= 8.6.
+GRADLE_BIN="${GRADLE_HOME:+$GRADLE_HOME/bin/}gradle"
+GRADLE_VER="$("$GRADLE_BIN" --version 2>/dev/null | sed -n 's/^Gradle \([0-9.]*\).*/\1/p' | head -1)"
+case "$GRADLE_VER" in
+  8.[6-9]*|8.[1-9][0-9]*) ;;
+  *) echo "Need Gradle 8.6..8.x (found '${GRADLE_VER:-none}' via ${GRADLE_BIN}); set GRADLE_HOME" >&2; exit 1 ;;
+esac
+
 # Host python that runs the rosidl generators. distutils is gone in Python 3.12; use sysconfig.
 PYTHON3_EXEC="$(command -v python3)"
 PYTHON3_LIBRARY="$("$PYTHON3_EXEC" -c 'import os, sysconfig; print(os.path.realpath(os.path.join(sysconfig.get_config_var("LIBPL"), sysconfig.get_config_var("LDLIBRARY"))))')"

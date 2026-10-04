@@ -34,10 +34,14 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # Not gradle/actions/setup-gradle: colcon-gradle resolves `gradle` through GRADLE_HOME or PATH
+      # and the runner's preinstalled Gradle 9 won (jcenter() is gone in 9). Install 8.7 explicitly.
       - name: Gradle 8.7
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
+        run: |
+          curl -fsSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.7-bin.zip
+          unzip -q /tmp/gradle.zip -d "$HOME"
+          echo "GRADLE_HOME=$HOME/gradle-8.7" >> "$GITHUB_ENV"
+          echo "$HOME/gradle-8.7/bin" >> "$GITHUB_PATH"
 
       - name: Android SDK + NDK
         uses: android-actions/setup-android@v3
