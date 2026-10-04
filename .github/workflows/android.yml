@@ -71,6 +71,18 @@ jobs:
           export ANDROID_NDK="$ANDROID_HOME/ndk/$NDK_VERSION"
           src/ros2-java/ros2_java/build.sh
 
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          echo "== python"; command -v python3; python3 --version; python3 -c 'import sys; print(sys.path)'
+          echo "== pip"; pip list 2>/dev/null | grep -i -E 'setuptools|colcon-core|colcon-python|empy|catkin'
+          echo "== build/ament_package"; ls -la build/ament_package || true
+          echo "== install/ament_package"; find install/ament_package -maxdepth 4 | head -40
+          echo "== dsv"; cat install/ament_package/share/ament_package/package.dsv || true
+          cat install/ament_package/share/ament_package/hook/pythonpath.dsv || true
+          echo "== ament_cmake_core command.log"; cat log/latest_build/ament_cmake_core/command.log | cut -c1-600 || true
+          echo "== ament_package build log"; cat log/latest_build/ament_package/stdout_stderr.log | tail -30 || true
+
       - name: Upload AAR artifact
         uses: actions/upload-artifact@v4
         with:
