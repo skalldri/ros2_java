@@ -52,9 +52,12 @@ jobs:
         echo "== packages built"; ls install
         echo "== resource index entries"; find install -path '*ament_index/resource_index/*' | sort
         echo "== ament_java_resources install tree"; find install/ament_java_resources -type f -o -type l | sort
-        echo "== AMENT_PREFIX_PATH seen by the rcljava_common build"
-        grep -h -o 'AMENT_PREFIX_PATH=[^ ]*' build/rcljava_common/CMakeCache.txt log/latest_build/rcljava_common/* 2>/dev/null | head -3
-        cat log/latest_build/rcljava_common/command.log 2>/dev/null | head -5
+        echo "== environment colcon gave the rcljava_common build"
+        grep -h -o 'AMENT_PREFIX_PATH=[^ ]*' log/latest_build/rcljava_common/command.log 2>/dev/null | head -2
+        echo "== ament_build_type_gradle install tree and hook contents"
+        find install/ament_build_type_gradle -type f -o -type l | sort
+        for f in $(find install/ament_build_type_gradle -name '*.dsv' -o -name '*.sh' | sort); do echo "--- $f"; cat "$f"; done
+        echo "== colcon version"; colcon version-check 2>/dev/null | head -30
     - name: Run Colcon Test
       run: |
         source /opt/ros/jazzy/setup.bash
