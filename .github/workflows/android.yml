@@ -1,0 +1,108 @@
+# Cross-build the rclandroid AAR (ROS 2 Java/Android bindings for the Segway Loomo: Android 5.1,
+# API 22, Intel x86_64). The recipe lives in build.sh; this workflow only provides the toolchain.
+# A push of a tag v* also publishes the AAR as a GitHub Release asset so the robot's Jetson can
+# fetch it without a PC.
+name: Android AAR
+
+on:
+  push:
+    branches: [jazzy]
+    tags: ['v*']
+  pull_request:
+    branches: [jazzy]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  NDK_VERSION: 26.3.11579264
+
+jobs:
+  rclandroid:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out ros2_java
+        uses: actions/checkout@v4
+        with:
+          path: src/ros2-java/ros2_java
+
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Not gradle/actions/setup-gradle: colcon-gradle resolves `gradle` through GRADLE_HOME or PATH
+      # and the runner's preinstalled Gradle 9 won (jcenter() is gone in 9). Install 8.7 explicitly.
+      - name: Gradle 8.7
+        run: |
+          curl -fsSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.7-bin.zip
+          unzip -q /tmp/gradle.zip -d "$HOME"
+          echo "GRADLE_HOME=$HOME/gradle-8.7" >> "$GITHUB_ENV"
+          echo "$HOME/gradle-8.7/bin" >> "$GITHUB_PATH"
+
+      - name: Android SDK + NDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0 platform-tools platforms;android-22 ndk;26.3.11579264
+
+      - name: colcon, vcstool and rosidl generator dependencies (venv)
+        run: |
+          python3 -m venv ~/.venvs/ros2-android
+          ~/.venvs/ros2-android/bin/pip install --upgrade pip
+          ~/.venvs/ros2-android/bin/pip install \
+            colcon-common-extensions vcstool \
+            git+https://github.com/colcon/colcon-gradle.git \
+            git+https://github.com/colcon/colcon-ros-gradle.git \
+            empy==3.3.4 lark numpy pyyaml catkin_pkg packaging setuptools importlib-metadata
+          echo "$HOME/.venvs/ros2-android/bin" >> "$GITHUB_PATH"
+
+      - name: Import the Android workspace (keeping the checked-out ros2_java)
+        run: |
+          python3 - <<'PY'
+          import yaml
+          d = yaml.safe_load(open('src/ros2-java/ros2_java/ros2_java_android.repos'))
+          d['repositories'].pop('ros2-java/ros2_java')
+          yaml.safe_dump(d, open('others.repos', 'w'))
+          PY
+          vcs import --input others.repos src
+          ls src/ros2-java
+
+      - name: Build rclandroid
+        run: |
+          export ANDROID_NDK="$ANDROID_HOME/ndk/$NDK_VERSION"
+          src/ros2-java/ros2_java/build.sh
+
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          echo "== python"; command -v python3; python3 --version; python3 -c 'import sys; print(sys.path)'
+          echo "== pip"; pip list 2>/dev/null | grep -i -E 'setuptools|colcon-core|colcon-python|empy|catkin'
+          echo "== build/ament_package"; ls -la build/ament_package || true
+          echo "== install/ament_package"; find install/ament_package -maxdepth 4 | head -40
+          echo "== dsv"; cat install/ament_package/share/ament_package/package.dsv || true
+          cat install/ament_package/share/ament_package/hook/pythonpath.dsv || true
+          echo "== ament_cmake_core command.log"; cat log/latest_build/ament_cmake_core/command.log | cut -c1-600 || true
+          echo "== ament_package build log"; cat log/latest_build/ament_package/stdout_stderr.log | tail -30 || true
+
+      - name: Upload AAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rclandroid-release-aar
+          path: install/rclandroid/share/rclandroid/android/rclandroid-release.aar
+          if-no-files-found: error
+
+      - name: Publish release asset (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "rclandroid ${GITHUB_REF_NAME}" \
+            --notes "rclandroid-release.aar built by GitHub Actions run ${GITHUB_RUN_ID} (x86_64, API 22, NDK ${NDK_VERSION})." \
+            install/rclandroid/share/rclandroid/android/rclandroid-release.aar || \
+          gh release upload "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --clobber \
+            install/rclandroid/share/rclandroid/android/rclandroid-release.aar
