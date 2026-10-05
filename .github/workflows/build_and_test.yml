@@ -34,10 +34,12 @@ jobs:
     # imported from ros2_java_desktop.repos (the rest of that file is the ROS 2 core, needed only
     # when building for a distribution without binaries). Building the core from source on Noble
     # also failed with "No module named 'ament_package'" in ament_cmake_core.
+    # The workspace lives outside the checkout: with it inside, the symlink to the checkout in
+    # src/ makes rosdep (and anything else crawling src/) find every package twice.
     - name: Setup workspace with the ros2-java repos
       run: |
-        mkdir -p ros2_java_ws/src
-        cd ros2_java_ws
+        mkdir -p $HOME/ros2_java_ws/src
+        cd $HOME/ros2_java_ws
         python3 - <<'EOF'
         import yaml
         d = yaml.safe_load(open('${{ github.workspace }}/ros2_java_desktop.repos'))
@@ -53,22 +55,22 @@ jobs:
       run: |
         source /opt/ros/jazzy/setup.bash
         rosdep update --rosdistro jazzy
-        rosdep install --from-paths ros2_java_ws/src --ignore-src -y --rosdistro jazzy
+        rosdep install --from-paths $HOME/ros2_java_ws/src --ignore-src -y --rosdistro jazzy
     - name: Run Colcon Build
       run: |
         source /opt/ros/jazzy/setup.bash
-        cd ros2_java_ws
+        cd $HOME/ros2_java_ws
         colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
     - name: Diagnostics on failure
       if: failure()
       run: |
-        cd ros2_java_ws
+        cd $HOME/ros2_java_ws
         echo "== packages built"; ls install
         for f in build/*/colcon_command_prefix_*; do echo "--- $f"; grep -v '^#' "$f" | head -20; done || true
     - name: Run Colcon Test
       run: |
         source /opt/ros/jazzy/setup.bash
-        cd ros2_java_ws
+        cd $HOME/ros2_java_ws
         source install/setup.bash
         colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
         colcon test-result --verbose
