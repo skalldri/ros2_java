@@ -58,6 +58,10 @@ jobs:
         find install/ament_build_type_gradle -type f -o -type l | sort
         for f in $(find install/ament_build_type_gradle -name '*.dsv' -o -name '*.sh' | sort); do echo "--- $f"; cat "$f"; done
         echo "== colcon version"; colcon version-check 2>/dev/null | head -30
+        echo "== how colcon chains the hooks of an ament_cmake package (ament_java_resources)"
+        for f in package.dsv local_setup.dsv environment/ament_prefix_path.dsv hook/cmake_prefix_path.dsv; do echo "--- $f"; cat install/ament_java_resources/share/ament_java_resources/$f; done
+        echo "== full colcon invocation line for rcljava_common"
+        grep -m1 "Invoking command" log/latest_build/rcljava_common/command.log | tr ' ' '\n' | grep -E "^(AMENT_PREFIX_PATH|CMAKE_PREFIX_PATH|PYTHONPATH|/usr/bin/cmake)" | cut -c1-600
     - name: Run Colcon Test
       run: |
         source /opt/ros/jazzy/setup.bash
