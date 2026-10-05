@@ -47,6 +47,13 @@ jobs:
         vcs import --input java.repos src
         # Use checked out version of ros2_java
         ln --symbolic ${{ github.workspace }} src/ros2-java/ros2_java
+    # ros-jazzy-desktop lacks some declared dependencies (test_interface_files for the
+    # generator tests, for one); rosdep installs whatever the package.xml files ask for.
+    - name: Install workspace dependencies with rosdep
+      run: |
+        source /opt/ros/jazzy/setup.bash
+        rosdep update --rosdistro jazzy
+        rosdep install --from-paths ros2_java_ws/src --ignore-src -y --rosdistro jazzy
     - name: Run Colcon Build
       run: |
         source /opt/ros/jazzy/setup.bash
