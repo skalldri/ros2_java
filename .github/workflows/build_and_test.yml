@@ -67,12 +67,8 @@ jobs:
         ls -l install/ament_java_resources/share/ament_java_resources/environment/
         echo "== local_setup.sh prefix logic"
         grep -n -E "AMENT_CURRENT_PREFIX|COLCON_CURRENT_PREFIX|dirname" install/ament_java_resources/share/ament_java_resources/local_setup.sh | head -12
-        echo "== colcon command prefix script for rcljava_common"
-        cat build/rcljava_common/colcon_command_prefix_build.sh
-        echo "== resulting environment (AMENT/CMAKE prefix paths)"
-        grep -E "^(AMENT_PREFIX_PATH|CMAKE_PREFIX_PATH|AMENT_CURRENT_PREFIX|COLCON_CURRENT_PREFIX)=" build/rcljava_common/colcon_command_prefix_build.sh.env
-        echo "== sourcing that prefix script by hand, with set -x on the ament hook"
-        bash -c 'source build/rcljava_common/colcon_command_prefix_build.sh; echo "AMENT_PREFIX_PATH=$AMENT_PREFIX_PATH"' 2>&1 | tail -5
+        echo "== build/rcljava_common contents"; ls -la build/rcljava_common || true
+        for f in build/rcljava_common/colcon_command_prefix_*; do echo "--- $f"; grep -v '^#' "$f" | grep -E "AMENT|CMAKE_PREFIX|COLCON|source|\. " | head -40; done || true
         echo "== full colcon invocation line for rcljava_common"
         grep -m1 "Invoking command" log/latest_build/rcljava_common/command.log | tr ' ' '\n' | grep -E "^(AMENT_PREFIX_PATH|CMAKE_PREFIX_PATH|PYTHONPATH|/usr/bin/cmake)" | cut -c1-600
     - name: Run Colcon Test
