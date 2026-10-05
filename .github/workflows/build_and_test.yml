@@ -23,20 +23,31 @@ jobs:
       with:
         required-ros-distributions: jazzy
     - uses: actions/checkout@v5
-    - name: Setup workspace with VCS repo file
+    # setup-ros installs ros-jazzy-desktop, so build on top of it: only the ros2-java repos are
+    # imported from ros2_java_desktop.repos (the rest of that file is the ROS 2 core, needed only
+    # when building for a distribution without binaries). Building the core from source on Noble
+    # also failed with "No module named 'ament_package'" in ament_cmake_core.
+    - name: Setup workspace with the ros2-java repos
       run: |
         mkdir -p ros2_java_ws/src
         cd ros2_java_ws
-        curl -sL file://${{ github.workspace }}/ros2_java_desktop.repos | vcs import src
+        python3 - <<'EOF'
+        import yaml
+        d = yaml.safe_load(open('${{ github.workspace }}/ros2_java_desktop.repos'))
+        d['repositories'] = {k: v for k, v in d['repositories'].items() if k.startswith('ros2-java/') and k != 'ros2-java/ros2_java'}
+        yaml.safe_dump(d, open('java.repos', 'w'))
+        EOF
+        vcs import --input java.repos src
         # Use checked out version of ros2_java
-        rm -rf src/ros2-java/ros2_java
-        ln --symbolic ${{ github.workspace }} src/ros2-java
+        ln --symbolic ${{ github.workspace }} src/ros2-java/ros2_java
     - name: Run Colcon Build
       run: |
+        source /opt/ros/jazzy/setup.bash
         cd ros2_java_ws
         colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
     - name: Run Colcon Test
       run: |
+        source /opt/ros/jazzy/setup.bash
         cd ros2_java_ws
         source install/setup.bash
         colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
