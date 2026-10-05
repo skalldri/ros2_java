@@ -60,6 +60,13 @@ jobs:
         echo "== colcon version"; colcon version-check 2>/dev/null | head -30
         echo "== how colcon chains the hooks of an ament_cmake package (ament_java_resources)"
         for f in package.dsv local_setup.dsv environment/ament_prefix_path.dsv hook/cmake_prefix_path.dsv; do echo "--- $f"; cat install/ament_java_resources/share/ament_java_resources/$f; done
+        echo "== sourcing ament_java_resources' package.bash in a clean subshell"
+        env -i HOME=$HOME PATH=$PATH bash -c 'source install/ament_java_resources/share/ament_java_resources/package.bash; echo "AMENT_PREFIX_PATH=$AMENT_PREFIX_PATH"; echo "AMENT_CURRENT_PREFIX=$AMENT_CURRENT_PREFIX"; echo "COLCON_CURRENT_PREFIX=$COLCON_CURRENT_PREFIX"'
+        echo "== symlinks created by --symlink-install"
+        ls -l install/ament_java_resources/share/ament_java_resources/ | sed -n '1,30p'
+        ls -l install/ament_java_resources/share/ament_java_resources/environment/
+        echo "== local_setup.sh prefix logic"
+        grep -n -E "AMENT_CURRENT_PREFIX|COLCON_CURRENT_PREFIX|dirname" install/ament_java_resources/share/ament_java_resources/local_setup.sh | head -12
         echo "== full colcon invocation line for rcljava_common"
         grep -m1 "Invoking command" log/latest_build/rcljava_common/command.log | tr ' ' '\n' | grep -E "^(AMENT_PREFIX_PATH|CMAKE_PREFIX_PATH|PYTHONPATH|/usr/bin/cmake)" | cut -c1-600
     - name: Run Colcon Test
