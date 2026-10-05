@@ -10,6 +10,13 @@ on:
 jobs:
   build_and_test_desktop:
     runs-on: ubuntu-24.04
+    env:
+      # The runner has pwsh, and colcon-powershell then outranks the bash shell extension when
+      # colcon builds each package's environment from package.ps1 files. ament's
+      # AMENT_PREFIX_PATH hooks only exist for sh/dsv, so dependencies' ament prefixes went
+      # missing and ament_export_jars() could not find ament_java_resources' templates. The
+      # Android job carries the same blocklist for the same reason.
+      COLCON_EXTENSION_BLOCKLIST: colcon_core.shell.powershell
     steps:
     - name: Install Java
       run: |
@@ -50,27 +57,7 @@ jobs:
       run: |
         cd ros2_java_ws
         echo "== packages built"; ls install
-        echo "== resource index entries"; find install -path '*ament_index/resource_index/*' | sort
-        echo "== ament_java_resources install tree"; find install/ament_java_resources -type f -o -type l | sort
-        echo "== environment colcon gave the rcljava_common build"
-        grep -h -o 'AMENT_PREFIX_PATH=[^ ]*' log/latest_build/rcljava_common/command.log 2>/dev/null | head -2
-        echo "== ament_build_type_gradle install tree and hook contents"
-        find install/ament_build_type_gradle -type f -o -type l | sort
-        for f in $(find install/ament_build_type_gradle -name '*.dsv' -o -name '*.sh' | sort); do echo "--- $f"; cat "$f"; done
-        echo "== colcon version"; colcon version-check 2>/dev/null | head -30
-        echo "== how colcon chains the hooks of an ament_cmake package (ament_java_resources)"
-        for f in package.dsv local_setup.dsv environment/ament_prefix_path.dsv hook/cmake_prefix_path.dsv; do echo "--- $f"; cat install/ament_java_resources/share/ament_java_resources/$f; done
-        echo "== sourcing ament_java_resources' package.bash in a clean subshell"
-        env -i HOME=$HOME PATH=$PATH bash -c 'source install/ament_java_resources/share/ament_java_resources/package.bash; echo "AMENT_PREFIX_PATH=$AMENT_PREFIX_PATH"; echo "AMENT_CURRENT_PREFIX=$AMENT_CURRENT_PREFIX"; echo "COLCON_CURRENT_PREFIX=$COLCON_CURRENT_PREFIX"'
-        echo "== symlinks created by --symlink-install"
-        ls -l install/ament_java_resources/share/ament_java_resources/ | sed -n '1,30p'
-        ls -l install/ament_java_resources/share/ament_java_resources/environment/
-        echo "== local_setup.sh prefix logic"
-        grep -n -E "AMENT_CURRENT_PREFIX|COLCON_CURRENT_PREFIX|dirname" install/ament_java_resources/share/ament_java_resources/local_setup.sh | head -12
-        echo "== build/rcljava_common contents"; ls -la build/rcljava_common || true
-        for f in build/rcljava_common/colcon_command_prefix_*; do echo "--- $f"; grep -v '^#' "$f" | grep -E "AMENT|CMAKE_PREFIX|COLCON|source|\. " | head -40; done || true
-        echo "== full colcon invocation line for rcljava_common"
-        grep -m1 "Invoking command" log/latest_build/rcljava_common/command.log | tr ' ' '\n' | grep -E "^(AMENT_PREFIX_PATH|CMAKE_PREFIX_PATH|PYTHONPATH|/usr/bin/cmake)" | cut -c1-600
+        for f in build/*/colcon_command_prefix_*; do echo "--- $f"; grep -v '^#' "$f" | head -20; done || true
     - name: Run Colcon Test
       run: |
         source /opt/ros/jazzy/setup.bash
