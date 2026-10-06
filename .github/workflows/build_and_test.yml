@@ -30,10 +30,12 @@ jobs:
       with:
         required-ros-distributions: jazzy
     - uses: actions/checkout@v5
-    # setup-ros installs ros-jazzy-desktop, so build on top of it: only the ros2-java repos are
-    # imported from ros2_java_desktop.repos (the rest of that file is the ROS 2 core, needed only
-    # when building for a distribution without binaries). Building the core from source on Noble
-    # also failed with "No module named 'ament_package'" in ament_cmake_core.
+    # setup-ros installs ros-jazzy-desktop, so build on top of it. From ros2_java_desktop.repos
+    # only the ros2-java repos and the interface packages are imported: binary interface packages
+    # carry no Java bindings, so rcl_interfaces, builtin_interfaces, std_msgs etc. must be rebuilt
+    # here with rosidl_generator_java present. The rest of that file is the ROS 2 core, needed
+    # only for a distribution without binaries (and building it from source on Noble failed with
+    # "No module named 'ament_package'" in ament_cmake_core).
     # The workspace lives outside the checkout: with it inside, the symlink to the checkout in
     # src/ makes rosdep (and anything else crawling src/) find every package twice.
     - name: Setup workspace with the ros2-java repos
@@ -43,7 +45,8 @@ jobs:
         python3 - <<'EOF'
         import yaml
         d = yaml.safe_load(open('${{ github.workspace }}/ros2_java_desktop.repos'))
-        d['repositories'] = {k: v for k, v in d['repositories'].items() if k.startswith('ros2-java/') and k != 'ros2-java/ros2_java'}
+        keep = ('ros2/rcl_interfaces', 'ros2/unique_identifier_msgs', 'ros2/common_interfaces', 'ros2/test_interface_files')
+        d['repositories'] = {k: v for k, v in d['repositories'].items() if (k.startswith('ros2-java/') and k != 'ros2-java/ros2_java') or k in keep}
         yaml.safe_dump(d, open('java.repos', 'w'))
         EOF
         vcs import --input java.repos src
@@ -60,7 +63,8 @@ jobs:
       run: |
         source /opt/ros/jazzy/setup.bash
         cd $HOME/ros2_java_ws
-        colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
+        # std_msgs: rcljava's tests use it, and test dependencies are not part of --packages-up-to.
+        colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava std_msgs
     - name: Diagnostics on failure
       if: failure()
       run: |
