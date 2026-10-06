@@ -45,7 +45,11 @@ jobs:
         python3 - <<'EOF'
         import yaml
         d = yaml.safe_load(open('${{ github.workspace }}/ros2_java_desktop.repos'))
-        keep = ('ros2/rcl_interfaces', 'ros2/unique_identifier_msgs', 'ros2/common_interfaces', 'ros2/test_interface_files')
+        # rosidl_defaults/rosidl_core: rosidl_default_generators finds generators through a
+        # group_depend on rosidl_generator_packages, which colcon only resolves for packages in
+        # the workspace; as binaries they would never pull rosidl_generator_java in ahead of the
+        # interface packages, and no Java classes would be generated.
+        keep = ('ros2/rosidl_core', 'ros2/rosidl_defaults', 'ros2/rcl_interfaces', 'ros2/unique_identifier_msgs', 'ros2/common_interfaces', 'ros2/test_interface_files')
         d['repositories'] = {k: v for k, v in d['repositories'].items() if (k.startswith('ros2-java/') and k != 'ros2-java/ros2_java') or k in keep}
         yaml.safe_dump(d, open('java.repos', 'w'))
         EOF
