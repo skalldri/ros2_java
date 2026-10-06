@@ -10,6 +10,13 @@ on:
 jobs:
   build_and_test_desktop:
     runs-on: ubuntu-24.04
+    env:
+      # The runner has pwsh, and colcon-powershell then outranks the bash shell extension when
+      # colcon builds each package's environment from package.ps1 files. ament's
+      # AMENT_PREFIX_PATH hooks only exist for sh/dsv, so dependencies' ament prefixes went
+      # missing and ament_export_jars() could not find ament_java_resources' templates. The
+      # Android job carries the same blocklist for the same reason.
+      COLCON_EXTENSION_BLOCKLIST: colcon_core.shell.powershell
     steps:
     - name: Install Java
       run: |
@@ -23,21 +30,55 @@ jobs:
       with:
         required-ros-distributions: jazzy
     - uses: actions/checkout@v5
-    - name: Setup workspace with VCS repo file
+    # setup-ros installs ros-jazzy-desktop, so build on top of it. From ros2_java_desktop.repos
+    # only the ros2-java repos and the interface packages are imported: binary interface packages
+    # carry no Java bindings, so rcl_interfaces, builtin_interfaces, std_msgs etc. must be rebuilt
+    # here with rosidl_generator_java present. The rest of that file is the ROS 2 core, needed
+    # only for a distribution without binaries (and building it from source on Noble failed with
+    # "No module named 'ament_package'" in ament_cmake_core).
+    # The workspace lives outside the checkout: with it inside, the symlink to the checkout in
+    # src/ makes rosdep (and anything else crawling src/) find every package twice.
+    - name: Setup workspace with the ros2-java repos
       run: |
-        mkdir -p ros2_java_ws/src
-        cd ros2_java_ws
-        curl -sL file://${{ github.workspace }}/ros2_java_desktop.repos | vcs import src
+        mkdir -p $HOME/ros2_java_ws/src
+        cd $HOME/ros2_java_ws
+        python3 - <<'EOF'
+        import yaml
+        d = yaml.safe_load(open('${{ github.workspace }}/ros2_java_desktop.repos'))
+        # rosidl_defaults/rosidl_core: rosidl_default_generators finds generators through a
+        # group_depend on rosidl_generator_packages, which colcon only resolves for packages in
+        # the workspace; as binaries they would never pull rosidl_generator_java in ahead of the
+        # interface packages, and no Java classes would be generated.
+        keep = ('ros2/rosidl_core', 'ros2/rosidl_defaults', 'ros2/rcl_interfaces', 'ros2/unique_identifier_msgs', 'ros2/common_interfaces', 'ros2/test_interface_files')
+        d['repositories'] = {k: v for k, v in d['repositories'].items() if (k.startswith('ros2-java/') and k != 'ros2-java/ros2_java') or k in keep}
+        yaml.safe_dump(d, open('java.repos', 'w'))
+        EOF
+        vcs import --input java.repos src
         # Use checked out version of ros2_java
-        rm -rf src/ros2-java/ros2_java
-        ln --symbolic ${{ github.workspace }} src/ros2-java
+        ln --symbolic ${{ github.workspace }} src/ros2-java/ros2_java
+    # ros-jazzy-desktop lacks some declared dependencies (test_interface_files for the
+    # generator tests, for one); rosdep installs whatever the package.xml files ask for.
+    - name: Install workspace dependencies with rosdep
+      run: |
+        source /opt/ros/jazzy/setup.bash
+        rosdep update --rosdistro jazzy
+        rosdep install --from-paths $HOME/ros2_java_ws/src --ignore-src -y --rosdistro jazzy
     - name: Run Colcon Build
       run: |
-        cd ros2_java_ws
-        colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
+        source /opt/ros/jazzy/setup.bash
+        cd $HOME/ros2_java_ws
+        # std_msgs: rcljava's tests use it, and test dependencies are not part of --packages-up-to.
+        colcon build --event-handlers=console_direct+ --symlink-install --packages-up-to rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava std_msgs
+    - name: Diagnostics on failure
+      if: failure()
+      run: |
+        cd $HOME/ros2_java_ws
+        echo "== packages built"; ls install
+        for f in build/*/colcon_command_prefix_*; do echo "--- $f"; grep -v '^#' "$f" | head -20; done || true
     - name: Run Colcon Test
       run: |
-        cd ros2_java_ws
+        source /opt/ros/jazzy/setup.bash
+        cd $HOME/ros2_java_ws
         source install/setup.bash
         colcon test --event-handlers=console_direct+ --packages-select rosidl_generator_java_tests rosidl_generator_java rcljava_common rcljava
         colcon test-result --verbose
