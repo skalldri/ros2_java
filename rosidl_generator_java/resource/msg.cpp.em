@@ -323,8 +323,12 @@ normalized_type = get_normalized_type(member.type)
         env->ReleaseStringChars(_jfield_@(member.name)_value, _str@(member.name));
       }
 @[      else]@
-      // Element is itself a complex / user-defined type. Call the respective _from_java_function()
-      _dest_@(member.name)[i] = *_j@(normalized_type)_from_java_function(element, nullptr);
+      // Element is itself a complex / user-defined type. Convert it in place: the element was
+      // already initialized by the sequence/array init above. Passing nullptr here would make
+      // the callee __create() a new struct on the heap, whose shell (and this element's own
+      // initial allocations, overwritten by the copy) were never freed: a native leak on every
+      // publish and take.
+      _j@(normalized_type)_from_java_function(element, &_dest_@(member.name)[i]);
 @# End of type-based specialization
 @[    end if]@
       // Free the ref to the local element, no matter what we did with it
@@ -377,7 +381,9 @@ get_method_name = 'Get%sField' % get_java_type(member.type, use_primitives=True)
   jobject _jfield_@(member.name)_obj = env->GetObjectField(_jmessage_obj, _jfield_@(member.name)_fid);
 
   if (_jfield_@(member.name)_obj != nullptr) {
-    ros_message->@(member.name) = *_j@(normalized_type)_from_java_function(_jfield_@(member.name)_obj, nullptr);
+    // Convert in place into the member, which @(msg_normalized_type)__init() already
+    // initialized; see the note on sequence elements above.
+    _j@(normalized_type)_from_java_function(_jfield_@(member.name)_obj, &(ros_message->@(member.name)));
   }
   env->DeleteLocalRef(_jfield_@(member.name)_obj);
 @[    end if]@
